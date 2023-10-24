@@ -134,7 +134,7 @@ h1 {
 
 .counter-icon {
   font-size: 48px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   color: #0d0e0d;
 }
 
@@ -164,6 +164,19 @@ h1 {
 .counter-button:hover {
   background-color: #b8b2c3;
   color: black;
+}
+
+.counter-ticket{
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: solid 1px #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 2px;
+}
+.counter h3{
+  color: #0d0e0d;
+  font-size: 15px;
 }
 
 .total-services {
@@ -201,4 +214,3 @@ h1 {
 .counter-animating {
   animation: pulse 0.6s infinite;
 }
-
