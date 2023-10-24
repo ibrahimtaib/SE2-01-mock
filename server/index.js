@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const dao = require('./dao');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const { check, body, validationResult } = require('express-validator'); 
 const session = require('express-session');
 const cors = require('cors');
 
@@ -43,10 +44,17 @@ passport.deserializeUser((id, done) => {
 const app = new express();
 const port = 3001;
 
+
 app.use(session({
     secret: 'iej3d213ode31dncjd',
     resave: false,
     saveUninitialized: false
+}));
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
 }));
 
 app.use(passport.initialize());
