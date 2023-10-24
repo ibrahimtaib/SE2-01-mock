@@ -30,10 +30,11 @@ function App() {
 }
 
 function Main() {
-  <Routes>
-      <Route path="/" element={<QueueManagment />}>
-      </Route>
+  return (
+    <Routes>
+      <Route path="/" element={<QueueManagment />} />
     </Routes>
+  )
 }
 
 export default App
