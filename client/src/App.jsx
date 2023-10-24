@@ -4,25 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
   import { faUser } from '@fortawesome/free-solid-svg-icons'
 import './App.css'
 import QueueManagment from './QueManagement.jsx'
+import NavHeader from './NavBarComponent';
 import API from './API';
 import LoginComponent from './LoginComponent';
 
 
 function App() {
-  //const [count, setCount] = useState(0)
-  // const [services, setServices] = useState([])
-  // const [counters, setCounters] = useState([])
-
-  
-  const joinQueue = () => {
-    console.log('joinQueue')
-  }
-
-  const serveNext = (counterId) => {
-    console.log('serveNext', counterId)
-  }
-
-
 
   return (
     <BrowserRouter>
@@ -62,11 +49,24 @@ function Main() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/" element={<></>} />
-        <Route path="" element={<QueueManagment /> }></Route>
-        <Route path="/login" element={<LoginComponent />}></Route>
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+      <Route element={
+    <>
+      <NavHeader loggedIn={loggedIn} handleLogout={doLogout}/>
+      <Container fluid className="mt-3">
+        {message && <Row>
+          <Alert variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>
+        </Row> }
+        <Outlet/>
+      </Container>
+    </>} >
+        <Route path="/" element={<></>} />
+          <Route path="" element={<QueueManagment /> }></Route>
+          <Route path="/login" element={<LoginComponent />}></Route>
+          </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
