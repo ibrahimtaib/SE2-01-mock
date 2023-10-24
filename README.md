@@ -4,6 +4,8 @@ Mock project for SE2 - Office Queue Managment
 
 ## Database Ideas
 
+We need to add a new feature to table services with the waiting time of each service
+
 To check the queues we can do a SQL call like this :
 
 ```
