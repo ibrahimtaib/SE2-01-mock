@@ -6,7 +6,8 @@ import './App.css'
 import QueueManagment from './QueManagement.jsx'
 import NavHeader from './NavBarComponent';
 import API from './API';
-import LoginComponent from './LoginComponent';
+import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import {LoginComponent, LogoutButton} from './LoginComponent';
 
 
 function App() {
@@ -22,6 +23,7 @@ function Main() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(undefined);
+  const [message, setMessage] = useState('');
 
 
   const loginSuccessful = (user) => {
@@ -49,7 +51,6 @@ function Main() {
   }, []);
 
   return (
-    <BrowserRouter>
       <Routes>
       <Route element={
     <>
@@ -66,7 +67,6 @@ function Main() {
           <Route path="/login" element={<LoginComponent />}></Route>
           </Route>
       </Routes>
-    </BrowserRouter>
   )
 }
 

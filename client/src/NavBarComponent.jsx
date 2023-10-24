@@ -6,7 +6,7 @@ function NavHeader(props) {
   return (
   <Navbar bg="primary" variant="dark">
     <Container fluid>
-      <Link to='/' className='navbar-brand'>Walk the Line</Link>
+      <Link to='/' className='navbar-brand'>Office Queue Managment</Link>
       {props.loggedIn ? 
         <LogoutButton logout={props.handleLogout} /> :
         <Link to='/login'className='btn btn-outline-light'>Login</Link>
