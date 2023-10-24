@@ -7,7 +7,7 @@ const sqlite = require('sqlite3');
 const db = new sqlite.Database('se2-01-mock.sqlite', (err) => {
   if(err) throw err;
 });
-
+//asldkfjas
 async function getNextCustomer(counterId) {
   return new Promise(async (resolve, reject) => {
     try {
