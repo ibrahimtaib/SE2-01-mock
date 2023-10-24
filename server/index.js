@@ -82,6 +82,24 @@ app.get("/api/sessions/current", (req, res) => {
   } else res.status(401).json({ error: "Unauthenticated user!" });
 });
 
+/* Get Ticket */
+app.post("/api/tickets", (req, res) => {
+  const { serviceId } = req.body;
+
+  if (!serviceId) {
+    res.status(400).json({ error: "ServiceId is required!" });
+    return;
+  }
+
+  dao
+    .createTicket(req.body.serviceType)
+    .then((ticket) => {
+      res.json(ticket);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "An error occurred during your request" });
+    });
+});
 ///*  API Website  *///
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
