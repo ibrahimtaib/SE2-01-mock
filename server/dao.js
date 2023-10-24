@@ -14,7 +14,6 @@ async function getNextCustomer(counterId) {
       const supportedServiceTypes = await getSupportedServiceTypes(counterId);
 
       if (supportedServiceTypes.length === 0) {
-        // Il banco non gestisce alcun tipo di servizio
         resolve(null);
         return;
       }
@@ -24,11 +23,10 @@ async function getNextCustomer(counterId) {
       //   await resetQueues();
       // }
 
-      // Trova il tipo di servizio con la coda più lunga
       const queueLengths = await getQueueLengths(supportedServiceTypes);
 
       if (queueLengths.length === 0) {
-        return null; // Nessuna coda disponibile
+        return null; 
       }
 
       let longestQueue = queueLengths[0];
@@ -41,7 +39,6 @@ async function getNextCustomer(counterId) {
         }
       }
 
-      // Seleziona il prossimo cliente nella coda del tipo di servizio con la coda più lunga
       db.get(`
       SELECT t.ticketID as TicketID
       FROM tickets t
@@ -60,7 +57,6 @@ async function getNextCustomer(counterId) {
           };
           resolve(customer);
         } else {
-          // Nessun cliente trovato nella coda del banco specificato e del tipo di servizio con la coda più lunga
           resolve(null);
         }
       }
@@ -71,7 +67,7 @@ async function getNextCustomer(counterId) {
   });
 }
 
-// Funzione per ottenere i tipi di servizio supportati da un banco specifico
+
 async function getSupportedServiceTypes(counterId) {
   return new Promise((resolve, reject) => {
     db.all(`
@@ -89,12 +85,10 @@ async function getSupportedServiceTypes(counterId) {
   });
 }
 
-// Funzione per ottenere le lunghezze delle code per ciascun tipo di servizio
 async function getQueueLengths(supportedServiceTypes) {
   return new Promise((resolve, reject) => {
     const queueLengths = [];
 
-    // Per ogni tipo di servizio supportato, calcola la lunghezza della coda
     for (const serviceType of supportedServiceTypes) {
       db.get(`
         SELECT COUNT(t.ticketID) as QueueLength, s.waitingTime as ServiceTime
@@ -111,7 +105,6 @@ async function getQueueLengths(supportedServiceTypes) {
             waitingTime: row.ServiceTime 
           });
 
-          // Se abbiamo ottenuto lunghezze per tutti i tipi di servizio, risolviamo la promessa
           if (queueLengths.length === supportedServiceTypes.length) {
             resolve(queueLengths);
           }
