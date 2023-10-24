@@ -51,7 +51,7 @@ app.use(
     saveUninitialized: false,
   })
 );
-
+app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
