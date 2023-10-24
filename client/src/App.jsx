@@ -1,34 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect, useContext } from 'react'
+import { BrowserRouter, Routes, Route, Outlet, useNavigate, Navigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+  import { faUser } from '@fortawesome/free-solid-svg-icons'
 import './App.css'
+import QueueManagment from './QueManagement.jsx'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0)
+  // const [services, setServices] = useState([])
+  // const [counters, setCounters] = useState([])
+
+
+  const joinQueue = () => {
+    console.log('joinQueue')
+  }
+
+  const serveNext = (counterId) => {
+    console.log('serveNext', counterId)
+  }
+
+
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BrowserRouter>
+      <Main />
+    </BrowserRouter>
+  )
+}
+
+function Main() {
+  return (
+    <Routes>
+      <Route path="/" element={<QueueManagment />} />
+    </Routes>
   )
 }
 
