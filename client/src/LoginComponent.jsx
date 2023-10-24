@@ -33,6 +33,7 @@ function LoginComponent(props) {
                                             onChange={event => { setUsername(event.target.value); setUsernameValid(true); }} />
                                     </Form.Group>
                                 </Row>
+                                <br></br>
                                 <Row className="mb-3">
                                     <Form.Group as={Col}>
                                         <Form.Label>Password</Form.Label>
@@ -43,6 +44,7 @@ function LoginComponent(props) {
                                             onChange={event => { setPassword(event.target.value); setPasswordValid(true); }} />
                                     </Form.Group>
                                 </Row>
+                                <br></br>
                                 <Button type="submit" variant="secondary">Login</Button>
                             </Form>
                         </Container>
