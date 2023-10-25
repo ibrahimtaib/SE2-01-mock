@@ -119,7 +119,7 @@ app.get('/api/services',
 );
 
 //Get All Counters
-app.get('/api/counters', isLoggedIn,
+app.get('/api/counters',
   async (req, res) => {
     try {
       const result = await dao.getCounters();
