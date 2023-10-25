@@ -14,7 +14,7 @@ function QueueManagement() {
   const [isCounter, setIsCounter] = useState(false)
   const [isTicket, setIsTicket] = useState(false)
 
-  const buttonDisplay = isTicket ? 'none' : 'initial';
+  const buttonDisplay = isTicket || isCounter ? 'none' : 'flex';
 
 
   const GetTicket = () => {
@@ -27,6 +27,9 @@ function QueueManagement() {
     console.log('serveNext', counterId)
   }
 
+  useEffect(() => {
+    console.log('isTicket', isTicket)
+  }, [isTicket])
 
 
   return (
