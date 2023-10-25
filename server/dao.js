@@ -8,6 +8,7 @@ const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
 });
 
 const databaseFunctions = {
+  
   async getNextCustomer(counterId) {
     return new Promise(async (resolve, reject) => {
       try {
