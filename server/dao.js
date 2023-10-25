@@ -8,7 +8,6 @@ const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
 });
 
 const databaseFunctions = {
-  
   async getNextCustomer(counterId) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -130,43 +129,44 @@ const databaseFunctions = {
     });
   },
 
-  
   async getServices() {
     return new Promise((resolve, reject) => {
-        db.all(
-          `
+      db.all(
+        `
           SELECT *
           FROM services
-          `, 
-          (err, rows) => {
-            if (err){
-              reject(new Error("Failed to get services."));
-            } else{
-              resolve(rows)
-            }
-        })
-    })
+          `,
+        (err, rows) => {
+          if (err) {
+            reject(new Error("Failed to get services."));
+          } else {
+            resolve(rows);
+          }
+        }
+      );
+    });
   },
 
-  async getCounters(){
+  async getCounters() {
     return new Promise((resolve, reject) => {
-      db.all(`
-      SELECT *, GROUP_CONCAT(services.name, , ) as services_list
+      db.all(
+        `
+      SELECT *, GROUP_CONCAT(services.name,', ') as services_list
       FROM counters
       JOIN services ON counters.serviceID = services.serviceID
       GROUP BY counterID
       `,
-      [], (err, rows) => {
-        if (err) {
-          reject(new Error("Failed to get counters."));
-        } 
-        else if (rows.length==0){
-          resolve({ error: "No counters found." });
-        }
-        else {
+        [],
+        (err, rows) => {
+          if (err) {
+            reject(new Error("Failed to get counters."));
+          } else if (rows.length == 0) {
+            resolve({ error: "No counters found." });
+          } else {
             resolve(rows);
           }
-      });
+        }
+      );
     });
   },
 
@@ -189,10 +189,5 @@ const databaseFunctions = {
     });
   },
 };
-
-
-
-
-
 
 module.exports = databaseFunctions;
