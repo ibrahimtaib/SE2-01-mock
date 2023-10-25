@@ -6,6 +6,7 @@ const sqlite = require("sqlite3");
 const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
   if (err) throw err;
 });
+
 const databaseFunctions = {
   async getNextCustomer(counterId) {
     return new Promise(async (resolve, reject) => {
@@ -128,6 +129,24 @@ const databaseFunctions = {
     });
   },
 
+  
+  async getServices() {
+    return new Promise((resolve, reject) => {
+        db.all(
+          `
+          SELECT *
+          FROM services
+          `, 
+          (err, rows) => {
+            if (err){
+              reject(new Error("Failed to get services."));
+            } else{
+              resolve(rows)
+            }
+        })
+    })
+  },
+
   async createTicket(serviceId) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -147,5 +166,31 @@ const databaseFunctions = {
     });
   },
 };
+
+
+
+/*da correggere
+getCounters(){
+  return new Promise((resolve, reject) => {
+    db.all(`
+    SELECT *
+    FROM counters
+    `,
+    [], (err, rows) => {
+      if (err) {
+        reject(new Error("Failed to get counters."));
+      } 
+      rows.forEach(row => {
+        if (row == undefined) {
+          resolve({ error: '' });
+        } else {
+          const arrayCounters = rows.map((row) => row.counterId)
+          resolve(arrayCounters);
+        }
+      });
+    });
+  });
+};
+*/
 
 module.exports = databaseFunctions;
