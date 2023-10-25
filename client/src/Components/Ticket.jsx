@@ -1,8 +1,8 @@
-import React from 'react'
+/* eslint-disable react/prop-types */
 
 function Ticket({ticket}) {
   return (
-    <div className="counter-ticket" style={{color:'black'}}>Ticket number{ticket.id}</div>
+    <div className="counter-ticket">Client : {ticket.id}</div>
   )
 }
 
