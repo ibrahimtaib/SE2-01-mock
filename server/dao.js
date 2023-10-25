@@ -151,7 +151,7 @@ const databaseFunctions = {
     return new Promise((resolve, reject) => {
       db.all(
         `
-      SELECT counterID, GROUP_CONCAT(serviceID,', ') as services_list, officerID
+      SELECT counterID, GROUP_CONCAT(services.serviceID,', ') as services_list, officerID
       FROM config_counters
       JOIN services ON config_counters.serviceID = services.serviceID
       GROUP BY counterID
@@ -159,14 +159,15 @@ const databaseFunctions = {
         [],
         (err, rows) => {
           if (err) {
+            console.log(err);
             reject(new Error("Failed to get counters."));
           } else {
-            resolve(rows.map((row)=>({
-              counterId: row.counterId,
-              services: row.services_list.split(', ')
-            })
-
-            ));
+            resolve(
+              rows.map((row) => ({
+                counterId: row.counterId,
+                services: row.services_list.split(", "),
+              }))
+            );
           }
         }
       );
