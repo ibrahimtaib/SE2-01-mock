@@ -3,28 +3,49 @@ import { SERVICES_MOCK, COUNTERS_MOCK, TICKETS_MOCK } from './data_mock.js'
 import Counter from './components/Counter.jsx'
 import Timer from './components/Timer.jsx'
 //prova
+const MOCK_GET_NEXT_CUSTOMER = {
+  ticketId: 1,
+}
 
 function QueueManagement() {
   // const [count, setCount] = useState(0)
-  // const [services, setServices] = useState([])
-  // const [counters, setCounters] = useState([])
-  // const [tickets, setTickets] = useState([])
-  // const [totalServices, setTotalServices] = useState(0)
-  //const [currentTicket, setCurrentTicket] = useState(null)
+  const [services, setServices] = useState(SERVICES_MOCK)
+  const [counters, setCounters] = useState(COUNTERS_MOCK)
+  const [responseCounter, setResponseCounter] = useState(1)
+  const [selectedService, setSelectedService] = useState(services[0].name)
+  const [currentTicket, setCurrentTicket] = useState(TICKETS_MOCK[0])
   const [isCounter, setIsCounter] = useState(false)
   const [isTicket, setIsTicket] = useState(false)
+  const [isMyturn, setIsMyturn] = useState(false)
 
   const buttonDisplay = isTicket || isCounter ? 'none' : 'flex';
 
 
-  const GetTicket = () => {
+  const GetTicket = (selectedService) => {
+    const serviceId = services.find((service) => service.name === selectedService).id
+    //call getTicket from server with selectedService.id
+    
     setIsTicket(isTicket => !isTicket)
-    
-    
+    setCurrentTicket(TICKETS_MOCK[0])
   }
 
   const serveNext = (counterId) => {
-    console.log('serveNext', counterId)
+    setResponseCounter(counterId)
+    // call getNextCostumer from server
+    const response = MOCK_GET_NEXT_CUSTOMER
+
+    //update counters
+    const updatedCounters = counters.map((counter) => {
+      if (counter.id === counterId) {
+        counter.currentTicketId = response.ticketId
+      }
+      return counter
+    })
+    setCounters(updatedCounters)
+    // check if it's my turn
+    setIsMyturn(response.ticketId === currentTicket.id)
+
+
   }
 
   useEffect(() => {
@@ -36,26 +57,35 @@ function QueueManagement() {
     <div className="fullscreen-container">
         <div className="queue">
           <h1>Queue Management System</h1>
+          <button onClick={()=>setIsMyturn(isMyturn => !isMyturn)} className="btn">My Turn</button>
+          <button onClick={()=>setIsCounter(isCounter => !isCounter)} className="btn">switch Mode</button>
           <div className="service-selection" style={{display:buttonDisplay}}>
             <label htmlFor="serviceName">Select Service:</label>
-            <select id="serviceName" className="form-control">
-              {SERVICES_MOCK.map((service) =>{
+            <select id="serviceName" 
+            className="form-control"
+            onChange={(e)=>setSelectedService(e.target.value)}>
+              {services.map((service) =>{
                 return <option key={service.name} value={service.name}>{service.name}</option>
               } )}
             </select>
-            <button onClick={GetTicket}  className="btn">Get Ticket</button>
+            <button onClick={()=>GetTicket(selectedService)}  className="btn">Get Ticket</button>
           </div>
-          {isTicket ? <div className="new-customer-info">
+          {isTicket && !isMyturn ? 
+            <div className="new-customer-info">
             <h3>Your Estimated Waiting Time is : <Timer duration={10}/> minutes</h3>
-            <h3>Your Ticket Number is : <span id="ticketNumber">{TICKETS_MOCK[0].id}</span> In Queue for {SERVICES_MOCK[0].name}<span></span></h3>
-            
-          </div>: ''}
+            <h3>Your Ticket Number is : <span id="ticketNumber">{currentTicket.id}</span> In Queue for {selectedService} </h3>
+            </div>: isMyturn ?
+            <div>
+              <h1>It is your turn!</h1>
+              <h1>Go to counter {responseCounter}</h1>
+            </div> : 
+            <div></div>
+            }
           
           <div className="counters" id="counters">
-          {COUNTERS_MOCK.map((counter) => {
-            const counter_tickets = TICKETS_MOCK.filter(ticket => ticket.counter === counter.id)
+          {counters.map((counter) => {
             return(
-              <Counter key={counter.id} counter={counter} tickets={counter_tickets} isCounter={isCounter} serveNext={serveNext}/>
+              <Counter key={counter.id} counter={counter} CurrentTicket={counter.currentTicketId} isCounter={isCounter} serveNext={serveNext}/>
             )
           })}
           </div>

@@ -55,6 +55,10 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/', (req, res)=>{
+  return res.status(200).json({message: "SERVER IS RUNNING CORRECTLY..."})
+})
+
 app.post(
   "/api/sessions",
   body("username", "Username non può essere vuoto").isString().notEmpty(),
