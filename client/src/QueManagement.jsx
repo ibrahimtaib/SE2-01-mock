@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SERVICES_MOCK, COUNTERS_MOCK, TICKETS_MOCK } from './data_mock.js'
-import Counter from './components/Counter.jsx'
-import Timer from './components/Timer.jsx'
+import Counter from './Components/Counter.jsx'
+import Timer from './Components/Timer.jsx'
 //prova
 const MOCK_GET_NEXT_CUSTOMER = {
   ticketId: 5,
