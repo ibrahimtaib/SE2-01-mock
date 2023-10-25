@@ -151,19 +151,22 @@ const databaseFunctions = {
     return new Promise((resolve, reject) => {
       db.all(
         `
-      SELECT *, GROUP_CONCAT(services.name,', ') as services_list
-      FROM counters
-      JOIN services ON counters.serviceID = services.serviceID
+      SELECT counterID, GROUP_CONCAT(serviceID,', ') as services_list, officerID
+      FROM config_counters
+      JOIN services ON config_counters.serviceID = services.serviceID
       GROUP BY counterID
       `,
         [],
         (err, rows) => {
           if (err) {
             reject(new Error("Failed to get counters."));
-          } else if (rows.length == 0) {
-            resolve({ error: "No counters found." });
           } else {
-            resolve(rows);
+            resolve(rows.map((row)=>({
+              counterId: row.counterId,
+              services: row.services_list.split(', ')
+            })
+
+            ));
           }
         }
       );
