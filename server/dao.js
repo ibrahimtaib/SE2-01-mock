@@ -1,13 +1,59 @@
 "use strict";
 
 const sqlite = require("sqlite3");
+const crypto = require('crypto');
 
 // open the database
 const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
   if (err) throw err;
 });
 
+
+
+
 const databaseFunctions = {
+
+  ///* EOF Login Functions */
+
+  async getUser(username, password) {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT * FROM users WHERE username = ?';
+      db.get(sql, [username], (err, row) => {
+        if (err) { reject(err); }
+        else if (row === undefined) { resolve(false); }
+        else {
+          const user = { userID: row.userID, username: row.username, role: row.role };
+          const salt = row.salt;
+          crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
+            if (err) reject(err);
+            const passwordHex = Buffer.from(row.hash, 'hex');
+            if (!crypto.timingSafeEqual(passwordHex, hashedPassword))
+              resolve(false);
+            else resolve(user);
+          });
+        }
+      });
+    });
+  },
+
+  async getUserById(id) {
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT * FROM users WHERE userID = ?';
+      db.get(sql, [id], (err, row) => {
+        if (err)
+          reject(err);
+        else if (row === undefined)
+          resolve({ error: 'Utente non trovato.' });
+        else {
+          const user = { userID: row.userID, username: row.username, role: row.role }
+          resolve(user);
+        }
+      });
+    });
+  },
+
+  ///* Start of OQM functions */
+
   async getNextCustomer(counterId) {
     return new Promise(async (resolve, reject) => {
       try {
