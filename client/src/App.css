@@ -38,7 +38,7 @@
 
 h1 {
   margin-top: 0;
-  font-size: 36px;
+  font-size: 30px;
   text-align: center;
   color: #333;
 }
@@ -134,7 +134,7 @@ h1 {
 
 .counter-icon {
   font-size: 48px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   color: #0d0e0d;
 }
 
@@ -166,12 +166,28 @@ h1 {
   color: black;
 }
 
+.counter-ticket{
+  font-size: larger;
+  font-weight: bolder;
+  color: black;
+  margin-bottom: 20px;
+  border: solid 1px #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 2px;
+}
+h3{
+  color: #0d0e0d;
+  font-size: 15px;
+}
+
 .total-services {
   margin-top: 20px;
 }
 
 .new-customer-info {
   margin-bottom: 30px;
+  color:#888;
   animation: fadeInUp 1s ease;
 }
 
@@ -201,4 +217,3 @@ h1 {
 .counter-animating {
   animation: pulse 0.6s infinite;
 }
-
