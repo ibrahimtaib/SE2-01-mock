@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 
-function Ticket({ticket}) {
+function Ticket({id}) {
   return (
-    <div className="counter-ticket">Client : {ticket.id}</div>
+    <div className="counter-ticket">Client : {id}</div>
   )
 }
 

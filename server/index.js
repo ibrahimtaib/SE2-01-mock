@@ -55,6 +55,10 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/', (req, res)=>{
+  return res.status(200).json({message: "SERVER IS RUNNING CORRECTLY..."})
+})
+
 app.post(
   "/api/sessions",
   body("username", "Username non può essere vuoto").isString().notEmpty(),
@@ -88,17 +92,21 @@ app.get("/api/sessions/current", (req, res) => {
 app.post("/api/tickets", (req, res) => {
   const { serviceId } = req.body;
 
-  if (!serviceId) {
+  if (serviceId === undefined) {
     res.status(400).json({ error: "ServiceId is required!" });
     return;
   }
-
+  if (isNaN(+serviceId)) {
+    res.status(400).json({ error: "ServiceId must be a number!" });
+    return;
+  }
   dao
-    .createTicket(req.body.serviceType)
-    .then((ticket) => {
-      res.json(ticket);
+    .createTicket(serviceId)
+    .then((data) => {
+      res.json(data);
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({ error: "An error occurred during your request" });
     });
 });
