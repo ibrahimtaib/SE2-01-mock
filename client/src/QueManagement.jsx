@@ -4,7 +4,7 @@ import Counter from './components/Counter.jsx'
 import Timer from './components/Timer.jsx'
 //prova
 const MOCK_GET_NEXT_CUSTOMER = {
-  ticketId: 1,
+  ticketId: 5,
 }
 
 function QueueManagement() {
@@ -24,26 +24,31 @@ function QueueManagement() {
   const GetTicket = (selectedService) => {
     const serviceId = services.find((service) => service.name === selectedService).id
     //call getTicket from server with selectedService.id
+    const response = {id: 5, service: 3}
     
     setIsTicket(isTicket => !isTicket)
-    setCurrentTicket(TICKETS_MOCK[0])
+    setCurrentTicket(response)
+    console.log('currentTicket', currentTicket)
   }
 
-  const serveNext = (counterId) => {
+  const serveNext = async (counterId) => {
+    
     setResponseCounter(counterId)
     // call getNextCostumer from server
-    const response = MOCK_GET_NEXT_CUSTOMER
-
-    //update counters
-    const updatedCounters = counters.map((counter) => {
-      if (counter.id === counterId) {
-        counter.currentTicketId = response.ticketId
-      }
-      return counter
-    })
-    setCounters(updatedCounters)
-    // check if it's my turn
-    setIsMyturn(response.ticketId === currentTicket.id)
+    setTimeout(() => {
+      const response = MOCK_GET_NEXT_CUSTOMER
+      const updatedCounters = counters.map((counter) => {
+        if (counter.id === counterId) {
+          counter.currentTicketId = response.ticketId
+        }
+        return counter
+      })
+      setCounters(updatedCounters)
+      // check if it's my turn
+      setIsMyturn(response.ticketId === currentTicket.id)
+    }, 2000)
+    
+    
 
 
   }
@@ -57,8 +62,8 @@ function QueueManagement() {
     <div className="fullscreen-container">
         <div className="queue">
           <h1>Queue Management System</h1>
-          <button onClick={()=>setIsMyturn(isMyturn => !isMyturn)} className="btn">My Turn</button>
-          <button onClick={()=>setIsCounter(isCounter => !isCounter)} className="btn">switch Mode</button>
+          <button onClick={()=>setIsMyturn(isMyturn => !isMyturn)} className="btn">MyTurn</button>
+          <button onClick={()=>setIsCounter(isCounter => !isCounter)} className="btn">Switch</button>
           <div className="service-selection" style={{display:buttonDisplay}}>
             <label htmlFor="serviceName">Select Service:</label>
             <select id="serviceName" 
