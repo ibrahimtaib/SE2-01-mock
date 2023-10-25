@@ -84,7 +84,6 @@ app.get("/api/sessions/current", (req, res) => {
 
 /* Create Ticket */
 
-
 app.post("/api/tickets", (req, res) => {
   const { serviceId } = req.body;
 
@@ -104,21 +103,18 @@ app.post("/api/tickets", (req, res) => {
 });
 
 //Get All Services
-app.get('/api/services',
-  async (req, res) => {
-    try {
-      const result = await dao.getServices();
-      if (result.error)
-        res.status(404).json(result);
-      else
-        res.json(result);
-    } catch (err) {
-      res.status(500).end();
-    }
+app.get("/api/services", async (req, res) => {
+  try {
+    const result = await dao.getServices();
+    if (result.error) res.status(404).json(result);
+    else res.json(result);
+  } catch (err) {
+    res.status(500).end();
   }
-);
+});
 
 //Get All Counters
+<<<<<<< HEAD
 app.get('/api/counters',
   async (req, res) => {
     try {
@@ -130,9 +126,17 @@ app.get('/api/counters',
     } catch (err) {
       res.status(500).json({ error: "Internal Server Error" });
     }
+=======
+app.get("/api/counters", async (req, res) => {
+  try {
+    const result = await dao.getCounters();
+    if (result.error) res.status(404).json(result);
+    else res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+>>>>>>> ef0781df057bb72df9d3c09973b7babf1c200dfc
   }
-);
-
+});
 
 ///*  API Website  *///
 app.listen(port, () => {
