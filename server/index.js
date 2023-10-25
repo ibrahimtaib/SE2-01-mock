@@ -82,7 +82,7 @@ app.get("/api/sessions/current", (req, res) => {
   } else res.status(401).json({ error: "Unauthenticated user!" });
 });
 
-/* Get Ticket */
+/* Create Ticket */
 app.post("/api/tickets", (req, res) => {
   const { serviceId } = req.body;
 
