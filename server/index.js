@@ -83,6 +83,8 @@ app.get("/api/sessions/current", (req, res) => {
 });
 
 /* Create Ticket */
+
+
 app.post("/api/tickets", (req, res) => {
   const { serviceId } = req.body;
 
@@ -100,6 +102,26 @@ app.post("/api/tickets", (req, res) => {
       res.status(500).json({ error: "An error occurred during your request" });
     });
 });
+
+
+
+app.get('/api/services', isLoggedIn,
+  async (req, res) => {
+    try {
+      const result = await dao.getServices();
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.json(result);
+    } catch (err) {
+      res.status(500).end();
+    }
+  }
+);
+
+
+
+
 ///*  API Website  *///
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
