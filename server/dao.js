@@ -164,7 +164,7 @@ const databaseFunctions = {
           } else {
             resolve(
               rows.map((row) => ({
-                counterId: row.counterId,
+                counterId: row.counterID,
                 services: row.services_list.split(", "),
               }))
             );
