@@ -103,8 +103,7 @@ app.post("/api/tickets", (req, res) => {
     });
 });
 
-
-
+//Get All Services
 app.get('/api/services', isLoggedIn,
   async (req, res) => {
     try {

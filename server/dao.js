@@ -147,6 +147,28 @@ const databaseFunctions = {
     })
   },
 
+  async getCounters(){
+    return new Promise((resolve, reject) => {
+      db.all(`
+      SELECT *, GROUP_CONCAT(services.name, , ) as services_list
+      FROM counters
+      JOIN services ON counters.serviceID = services.serviceID
+      GROUP BY counterID
+      `,
+      [], (err, rows) => {
+        if (err) {
+          reject(new Error("Failed to get counters."));
+        } 
+        else if (rows.length==0){
+          resolve({ error: "No counters found." });
+        }
+        else {
+            resolve(rows);
+          }
+      });
+    });
+  },
+
   async createTicket(serviceId) {
     return new Promise((resolve, reject) => {
       db.run(
@@ -169,28 +191,7 @@ const databaseFunctions = {
 
 
 
-/*da correggere
-getCounters(){
-  return new Promise((resolve, reject) => {
-    db.all(`
-    SELECT *
-    FROM counters
-    `,
-    [], (err, rows) => {
-      if (err) {
-        reject(new Error("Failed to get counters."));
-      } 
-      rows.forEach(row => {
-        if (row == undefined) {
-          resolve({ error: '' });
-        } else {
-          const arrayCounters = rows.map((row) => row.counterId)
-          resolve(arrayCounters);
-        }
-      });
-    });
-  });
-};
-*/
+
+
 
 module.exports = databaseFunctions;
