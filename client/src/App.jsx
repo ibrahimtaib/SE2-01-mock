@@ -1,5 +1,5 @@
 //import { useState, useEffect, useContext } from 'react'
-import { BrowserRouter, Routes, Route, Outlet, useNavigate, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import './App.css'
 import QueueManagment from './QueManagement.jsx'
