@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { getNextCustomer } from './API';
 //prova
 
 const SERVICES_MOCK = [
@@ -62,7 +63,7 @@ function QueueManagement() {
   }
 
   const serveNext = (counterId) => {
-    console.log('serveNext', counterId)
+    console.log(getNextCustomer(counterId))
   }
   return (
     <div className="fullscreen-container">

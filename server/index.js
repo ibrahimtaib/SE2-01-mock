@@ -52,9 +52,15 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  credentials: true, 
+}));
+
+
 app.post('/api/sessions',
-  body("username", "Username non può essere vuoto").isString().notEmpty(),
-  body("password", "Password non può essere vuoto").isString().notEmpty(),
+  //body("username", "Username non può essere vuoto").isString().notEmpty(),
+  //body("password", "Password non può essere vuoto").isString().notEmpty(),
   passport.authenticate('local'), (req, res) => {
 
     const errors = validationResult(req);
@@ -82,9 +88,11 @@ app.get('/api/sessions/current', (req, res) => {
 
 app.get('/api/nextcustomer/:counterId', async (req, res) => {
   const counterId = req.params.counterId;
+  
   try {
 
-    const customer = await getNextCustomer(counterId);
+    const customer = await dao.getNextCustomer(counterId);
+    console.log("customer:", customer);
     if (customer) {
       res.status(200).json(customer);
     } else {
@@ -96,5 +104,7 @@ app.get('/api/nextcustomer/:counterId', async (req, res) => {
 
 });
 
-
+app.listen(port,
+  () => { console.log(`Server started on http://localhost:${port}/`) }
+);
 ///*  API Website  *///

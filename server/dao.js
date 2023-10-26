@@ -11,13 +11,13 @@ async function getNextCustomer(counterId) {
   return new Promise(async (resolve, reject) => {
     try {
       const supportedServiceTypes = await getSupportedServiceTypes(counterId);
-
+      
       if (supportedServiceTypes.length === 0) {
         resolve(null);
         return;
       }
-
-      const queueLengths = await getQueueLengths(supportedServiceTypes);
+      
+      const queueLengths = await getQueueLengths(supportedServiceTypes);   
 
       if (queueLengths.length === 0) {
         return null; 
@@ -32,7 +32,7 @@ async function getNextCustomer(counterId) {
           longestQueue = queueLengths[i];
         }
       }
-
+        
       db.get(`
       SELECT t.ticketID as TicketID
       FROM tickets t
@@ -46,7 +46,6 @@ async function getNextCustomer(counterId) {
       } else {
         if (row) {
           const customer = {
-            customerID: row.CustomerID,
             ticketID: row.TicketID
           };
           resolve(customer);
@@ -122,5 +121,6 @@ async function resetQueues() {
   }
 }
 
+exports.getNextCustomer = getNextCustomer;
 
 
