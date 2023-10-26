@@ -69,27 +69,28 @@ async function login(username, password) {
 
   }
 
-  async function getNextCostumer(counterId){
-    const response = await fetch(URL+'/api/next',{
-        method:'POST',
-        credentials:'include',
-        body: JSON.stringify({ counterId }),
-    })
-    const services = response.json();
-    if (response.ok) {
-        return services;
-      } else {
-        throw services;
-      }
-  }
+  async function getNextCustomer(counterId) {
+    const apiUrl = `${URL}/nextcustomer/${counterId}`;
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      credentials: 'include', 
+    });
   
+    if (response.ok) {
+      const customer = await response.json();
+      return customer;
+    } else {
+      const errorResponse = await response.json();
+      throw errorResponse;
+    }
+  }
   const API = {
     getUserInfo,
     login,
     logout,
     getServices,
     getTicket,
-    getNextCostumer,
+    getNextCustomer,
   }
   
   export default API;

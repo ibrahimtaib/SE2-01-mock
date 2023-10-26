@@ -3,7 +3,7 @@ import { SERVICES_MOCK, COUNTERS_MOCK, TICKETS_MOCK } from './data_mock.js'
 import Counter from './Components/Counter.jsx'
 import Timer from './Components/Timer.jsx'
 import { BrowserRouter, Routes, Route, Outlet, useNavigate, Link } from 'react-router-dom';
-import { getNextCustomer } from './API';
+import API from './api';
 //prova
 const MOCK_GET_NEXT_CUSTOMER = {
   ticketId: 5,
@@ -39,6 +39,7 @@ function QueueManagement(props) {
 
     setResponseCounter(counterId)
     // call getNextCostumer from server
+    console.log(API.getNextCustomer(counterId))
     setTimeout(() => {
       const response = MOCK_GET_NEXT_CUSTOMER
       const updatedCounters = counters.map((counter) => {

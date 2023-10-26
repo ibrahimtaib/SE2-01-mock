@@ -63,11 +63,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors({
-  origin: 'http://localhost:5173', 
-  credentials: true, 
-}));
-
 
 app.post('/api/sessions',
   body("username", "Username non può essere vuoto").isString().notEmpty(),
@@ -120,6 +115,3 @@ app.listen(port,
   () => { console.log(`Server started on http://localhost:${port}/`) }
 );
 ///*  API Website  *///
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
