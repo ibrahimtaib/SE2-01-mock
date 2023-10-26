@@ -18,7 +18,7 @@ const isLoggedIn = (req, res, next) => {
 
 passport.use(
   new LocalStrategy(function (username, password, done) {
-    dao.getUser(username, hash).then((user) => {
+    dao.getUser(username, password).then((user) => {
       if (!user)
         return done(null, false, { message: "Username o password errata!" });
       return done(null, user);
