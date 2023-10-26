@@ -1,29 +1,44 @@
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import QueueManagement from '../../src/QueManagement.jsx';
+const dao = require('./dao'); // Import your DAO module
+const sqlite3 = require('sqlite3'); // Import the SQLite library or a mock if needed
 
-// Mock the props you want to pass to the component
-const mockProps = {
-  loggedIn: false, // You can adjust these props based on your test scenarios
-  doLogout: jest.fn(),
-};
+describe('createTicket', () => {
+  it('creates a ticket successfully', async () => {
+    const mockDb = new sqlite3.Database(':memory:'); // Use an in-memory database for testing
 
-test('QueueManagement renders correctly', () => {
-  const { getByText } = render(<QueueManagement {...mockProps} />);
-  
-  // You can use queries like getByText, getByTestId, etc. to check if specific elements are rendered correctly.
-  expect(getByText('Queue Management System')).toBeInTheDocument();
+    const serviceId = 1; // Replace with a valid serviceId
+
+    // Mock the database run function to resolve with a result
+    mockDb.run = jest.fn((sql, params, callback) => {
+      callback(null); // Simulate a successful database operation
+    });
+
+    // Replace the original DAO database with the mock
+    dao.setDatabase(mockDb);
+
+    // Call the createTicket function
+    const ticket = await dao.createTicket(serviceId);
+
+    expect(ticket).toEqual({
+      ticketId: expect.any(Number),
+      serviceId,
+    });
+  });
+
+  it('handles errors during ticket creation', async () => {
+    const mockDb = new sqlite3.Database(':memory:'); // Use an in-memory database for testing
+
+    const serviceId = 1; // Replace with a valid serviceId
+
+    // Mock the database run function to reject with an error
+    mockDb.run = jest.fn((sql, params, callback) => {
+      callback(new Error('Database error')); // Simulate a database error
+    });
+
+    // Replace the original DAO database with the mock
+    dao.setDatabase(mockDb);
+
+    // Call the createTicket function and expect it to reject with an error
+    await expect(dao.createTicket(serviceId)).rejects.toThrowError('Failed to create ticket.');
+  });
 });
 
-test('Get Ticket button works as expected', () => {
-  const { getByText } = render(<QueueManagement {...mockProps} />);
-  const getTicketButton = getByText('Get Ticket');
-
-  fireEvent.click(getTicketButton);
-
-  // You can assert the expected behavior based on the component's state changes or UI updates.
-  // For example, check if the waiting time is displayed after clicking the button.
-  expect(getByText('Your Estimated Waiting Time is :')).toBeInTheDocument();
-});
-
-// Add more test cases to cover different components, states, and behaviors.

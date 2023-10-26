@@ -95,7 +95,7 @@ app.get("/api/sessions/current", (req, res) => {
 app.post("/api/tickets", (req, res) => {
   const { serviceId } = req.body;
 
-  if (!serviceId) {
+  if (serviceId == undefined) {
     res.status(400).json({ error: "ServiceId is required!" });
     return;
   }
@@ -136,3 +136,5 @@ app.get("/api/counters", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+module.exports=app;
