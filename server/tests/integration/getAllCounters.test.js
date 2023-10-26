@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('./index'); // Import your Express app
-const dao = require('./dao'); // Import your data access object
+const app = require('../../index'); // Import your Express app
+const dao = require('../../dao'); // Import your data access object
 
 describe('GET /api/counters', () => {
   it('should return a list of counters', async () => {
