@@ -8,6 +8,68 @@ const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
   if (err) throw err;
 });
 
+ db.exec(`DELETE FROM user;
+          DELETE FROM config_counters;
+          DELETE FROM tickets;
+          DELETE FROM services;
+          DELETE FROM stats;
+          DELETE FROM counters;
+        INSERT INTO user(userID ,username, hash, salt, role)
+        VALUES(1,'Francesco_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
+        INSERT INTO user(userID,username, hash, salt, role)
+        VALUES(2, 'Jad_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
+        INSERT INTO user(userID, username, hash, salt, role)
+        VALUES(3, 'Manar_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
+        INSERT INTO user(userID, username, hash, salt, role)
+        VALUES(4, 'Federico_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
+        INSERT INTO user(userID, username, hash, salt, role)
+        VALUES(5, 'Ibrahim_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
+        INSERT INTO user(userID, username, hash, salt, role)
+        VALUES(6, 'Redon_Admin', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 2);
+        INSERT INTO user(userID, username, hash, salt, role)
+        VALUES(7, 'Mauro_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
+        INSERT INTO user(userID ,username, hash, salt, role)
+        VALUES(8,'Giovanni_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
+        INSERT INTO user(userID ,username, hash, salt, role)
+        VALUES(9,'Carlo_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
+        INSERT INTO services(serviceID, name)
+        VALUES(1, 'Customer Issues');
+        INSERT INTO services(serviceID, name)
+        VALUES(2, 'Account Issues');
+        INSERT INTO services(serviceID, name)
+        VALUES(3, 'Billing Issues');
+        INSERT INTO services(serviceID, name)
+        VALUES(4, 'General Problems');
+        INSERT OR IGNORE INTO counters(counterID)
+        VALUES (1);
+        INSERT OR IGNORE INTO counters(counterID)
+        VALUES (2);
+        INSERT OR IGNORE INTO counters(counterID)
+        VALUES (3);
+        INSERT OR IGNORE INTO counters(counterID)
+        VALUES (4);
+        INSERT INTO config_counters(counterID, serviceID, officerID, name)
+        VALUES (1, 1, 2, 'Counter 1');
+        INSERT INTO config_counters(counterID, serviceID, officerID, name)
+        VALUES (2, 2, 3, 'Counter 2');
+        INSERT INTO config_counters(counterID, serviceID, officerID, name)
+        VALUES (3, 3, 4, 'Counter 3');
+        INSERT INTO config_counters(counterID, serviceID, officerID, name)
+        VALUES (4, 4, 5, 'Counter 4');
+        INSERT INTO tickets(ticketID, serviceID, userID, status)
+        VALUES(1, 1, 1, 0);
+        INSERT INTO tickets(ticketID, serviceID, userID, status)
+        VALUES(2, 2, 7, 0);
+        INSERT INTO tickets(ticketID, serviceID, userID, status)
+        VALUES(3, 3, 8, 0);
+        INSERT INTO tickets(ticketID, serviceID, userID, status)
+        VALUES(4, 4, 9, 0);
+         `, function(err) {
+  if (err) {
+    console.error(err.message);
+  }
+}); 
+
 
 
 
@@ -88,13 +150,13 @@ const databaseFunctions = {
             longestQueue = queueLengths[i];
           }
         }
-
+        // FIXME: Dovremmo mettere status TEXT nel db oppure cambiare lo status in 0 pending, 1 done
         db.get(
           `
           SELECT t.ticketID as TicketID
           FROM tickets t
           WHERE t.serviceID = ?    
-          AND t.Status = 'waiting'
+          AND t.Status = 0
           ORDER BY t.ticketID ASC
           LIMIT 1
           `,
@@ -152,7 +214,7 @@ const databaseFunctions = {
           SELECT COUNT(t.ticketID) as QueueLength, s.waitingTime as ServiceTime
           FROM tickets t
           INNER JOIN services s ON t.serviceID = s.serviceID
-          WHERE t.serviceID = ? AND t.status = 'waiting'
+          WHERE t.serviceID = ? AND t.status = 0
         `,
           [serviceType],
           (err, row) => {
