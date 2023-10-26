@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import axios from 'axios'
 
 const api = axios.create({
@@ -32,13 +33,13 @@ export async function getUserInfo() {
   }
 
 export async function getTicket(serviceId){
+  try {
     const response = await api.post('/api/tickets',{ serviceId });
-    const ticket = response.json();
-    if (response.ok) {
-        return ticket;
-      } else {
-        throw ticket;
-      }
+    //const ticket = await response.json();
+    return response.data;
+  } catch (error) {
+      throw error;
+    }
 
   }
 
