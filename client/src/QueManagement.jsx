@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { SERVICES_MOCK, COUNTERS_MOCK, TICKETS_MOCK } from './data_mock.js'
 import Counter from './Components/Counter.jsx'
@@ -8,7 +9,7 @@ const MOCK_GET_NEXT_CUSTOMER = {
   ticketId: 5,
 }
 
-function QueueManagement(props) {
+function QueueManagement({loggedIn, doLogout, user, ...props}) {
   const navigate = useNavigate();
   // const [count, setCount] = useState(0)
   // TODO: Set states with database entries in App.jsx
@@ -71,8 +72,8 @@ function QueueManagement(props) {
         <h2>Queue Management System</h2>
         {/*<button onClick={()=>setIsMyturn(isMyturn => !isMyturn)} className="btn">MyTurn</button>*/}
         <button style={{ position: 'relative', right: -350, top: -90 }} onClick={() => setIsCounter(isCounter => !isCounter)} className="btn">Switch</button>
-        {props.loggedIn ? <><button active={false} style={{ position: 'relative', right: -360, top: -90 }} onClick={props.doLogout} className='btn'>Logout</button> </>:  ''}
-        {props.loggedIn ? '' : <><button active={false} style={{ position: 'relative', right: -360, top: -90 }} onClick={event => { event.preventDefault(); navigate("/login"); }} className='btn'>Login</button> </>}
+        {loggedIn ? <button  style={{ position: 'relative', right: -360, top: -90 }} onClick={doLogout} className='btn'>Logout</button>:
+                    <button  style={{ position: 'relative', right: -360, top: -90 }} onClick={event => { event.preventDefault(); navigate("/login"); }} className='btn'>Login</button>}
         <div className="service-selection" style={{ display: buttonDisplay }}>
           <label htmlFor="serviceName">Select Service:</label>
           <select id="serviceName"

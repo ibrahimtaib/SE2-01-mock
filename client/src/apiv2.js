@@ -65,12 +65,12 @@ export async function getCounters(){
   }
 
 export async function getNextCostumer(counterId){
-    const response = await api.post('/api/next',{ counterId });
-    const services = response.json();
+    const response = await api.get('/api/next',{ counterId });
+    const costumer = response.json();
     if (response.ok) {
-        return services;
+        return costumer;
       } else {
-        throw services;
+        throw costumer;
       }
 }
 
