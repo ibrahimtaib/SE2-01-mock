@@ -1,41 +1,39 @@
 import React from 'react'
 import { useState } from 'react';
-import Modal from '@mui/material/Modal';
 import CounterSelectable from './Components/CounterSelectable';
 import { COUNTERS_MOCK } from './data_mock';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
+import ServicesModal from './Components/ServicesModal';
 
 function AdminPage() {
   const [selectMode, toggleSelectMode] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [settingsOpened, setSettingsOpened] = useState(false);
   const countersSet = new Set();
-
   return (
     <div className='fullscreen-container'>
       <div className='admin-system'>
-        <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-        >
-          <div className='modal-div'>
-            <button className="close-btn" onClick={handleClose} ><FontAwesomeIcon className='icon' icon={faXmark} /></button>
-            <div className="content">
-            {COUNTERS_MOCK.map((counter) => <CounterSelectable key={counter.counterId} counter={counter} selectMode={selectMode} countersSet={countersSet}/>)}
-            </div> 
-            <div className='buttons'>
-            <button className="btn" disabled={!selectMode} onClick={handleOpen} >Add Services</button>
-            <button className="btn" disabled={!selectMode} >Delete Services</button>
-            </div>
-          </div>
-        </Modal>
+        <ServicesModal 
+          countersSet={countersSet} 
+          selectMode={selectMode}
+          open={open}
+          handleClose={handleClose}
+          />
+        <button className="settings-button" onClick={() => {
+          setSettingsOpened(!settingsOpened);
+        }}>
+          {!settingsOpened?(<FontAwesomeIcon className='icon' icon={faGear} />):"Manage Services"}
+          </button>
+        <ul className="nav">
+          <li className="nav-item">
+            <button>Manage Services</button>
+          </li>
+        </ul>
         <h1>Administration System</h1>
-        <button className="btn" disabled={!selectMode} onClick={handleOpen} >Add Services</button>
-        <button className="btn" disabled={!selectMode} >Delete Services</button>
+        <button className="btn" disabled={!selectMode} onClick={handleOpen} >Select Services</button>
         <button className="btn" 
           onClick={() => {toggleSelectMode(!selectMode)}}
           style={{backgroundColor: selectMode?'#4CAF50':''}}
