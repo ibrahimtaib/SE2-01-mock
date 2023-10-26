@@ -142,14 +142,23 @@ app.post("/api/config_counters", async (req, res) => {
 //add a lot of services to a lot of counters
 app.post("/api/counters/services", async (req, res) => {
   const { counters, services } = req.body;
-  console.log(counters, services, typeof counters, typeof services);
+  if (counters == undefined || services == undefined)
+    return res
+      .status(400)
+      .json({ error: "counters and services should be in the request's body" });
+  if (!Array.isArray(counters) || !Array.isArray(services))
+    return res
+      .status(400)
+      .json({ error: "counters and services should be arrays" });
   try {
     const result = await dao.addServiceToCounter_bis(counters, services);
     if (result.error) res.status(500).json(result.error);
     else res.json(result);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "An error occurred during the request" });
+    console.error(err);
+    return res
+      .status(500)
+      .json({ error: "An error occurred during the request" });
   }
 });
 //Get All Services
