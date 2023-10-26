@@ -16,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<QueueManagment />} />
         <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/login" element={<LoginComponent />} />
       </Routes>
     </BrowserRouter>
   )

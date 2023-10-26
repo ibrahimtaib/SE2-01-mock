@@ -22,13 +22,15 @@ function QueueManagement() {
 
 
   const GetTicket = (selectedService) => {
-    const serviceId = services.find((service) => service.name === selectedService).id
-    //call getTicket from server with selectedService.id
-    const response = {id: 5, service: 3}
+    setTimeout(() => {
+      const serviceId = services.find((service) => service.name === selectedService).id
     
-    setIsTicket(isTicket => !isTicket)
-    setCurrentTicket(response)
-    console.log('currentTicket', currentTicket)
+      //call getTicket from server with selectedService.id
+      const response = {id: 5, service: 3}
+      setIsTicket(isTicket => !isTicket)
+      setCurrentTicket(response)
+      console.log('currentTicket', currentTicket)
+    }, 2000)
   }
 
   const serveNext = async (counterId) => {
@@ -61,9 +63,9 @@ function QueueManagement() {
   return (
     <div className="fullscreen-container">
         <div className="queue">
-          <h1>Queue Management System</h1>
-          <button onClick={()=>setIsMyturn(isMyturn => !isMyturn)} className="btn">MyTurn</button>
-          <button onClick={()=>setIsCounter(isCounter => !isCounter)} className="btn">Switch</button>
+          <h2>Queue Management System</h2>
+          {/*<button onClick={()=>setIsMyturn(isMyturn => !isMyturn)} className="btn">MyTurn</button>*/}
+          <button style={{position:'relative', right:-400, top:-90}} onClick={()=>setIsCounter(isCounter => !isCounter)} className="btn">Switch</button>
           <div className="service-selection" style={{display:buttonDisplay}}>
             <label htmlFor="serviceName">Select Service:</label>
             <select id="serviceName" 
