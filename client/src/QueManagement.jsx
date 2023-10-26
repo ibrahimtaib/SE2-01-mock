@@ -14,7 +14,7 @@ function QueueManagement({loggedIn, doLogout, user, ...props}) {
   const navigate = useNavigate();
   // const [count, setCount] = useState(0)
   const [services, setServices] = useState(SERVICES_MOCK)
-  const [counters, setCounters] = useState(COUNTERS_MOCK)
+  const [counters, setCounters] = useState(COUNTERS_MOCK) 
   const [responseCounter, setResponseCounter] = useState(1)
   const [selectedService, setSelectedService] = useState(services[0].name)
   const [currentTicket, setCurrentTicket] = useState(TICKETS_MOCK[0])
