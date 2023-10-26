@@ -136,6 +136,21 @@ app.get('/api/counters',
   }
 );
 
+app.get('/api/next/:counterId',
+  async (req, res) => {
+    try {
+      const counterId = req.params.counterId;
+      const result = await dao.getNextCustomer(counterId);
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.json(result);
+    } catch (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
 ///*  API Website  *///
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

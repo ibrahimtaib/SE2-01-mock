@@ -47,7 +47,7 @@
   }
 }
 
-h1 {
+h1,h2 {
   margin-top: 0;
   font-size: 30px;
   text-align: center;
