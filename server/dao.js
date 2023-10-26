@@ -17,7 +17,7 @@ const databaseFunctions = {
 
   async getUser(username, password) {
     return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM users WHERE username = ?';
+      const sql = 'SELECT * FROM user WHERE username = ?';
       db.get(sql, [username], (err, row) => {
         if (err) { reject(err); }
         else if (row === undefined) { resolve(false); }
@@ -38,7 +38,7 @@ const databaseFunctions = {
 
   async getUserById(id) {
     return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM users WHERE userID = ?';
+      const sql = 'SELECT * FROM user WHERE userID = ?';
       db.get(sql, [id], (err, row) => {
         if (err)
           reject(err);
