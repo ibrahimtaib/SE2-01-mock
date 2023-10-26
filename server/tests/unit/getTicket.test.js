@@ -1,6 +1,6 @@
 const request = require("supertest");
-const app = require("./index"); // Import your Express app instance
-const dao = require("./dao"); // Import the module containing your DAO logic
+const app = require("../../index"); // Import your Express app instance
+const dao = require("../../dao"); // Import the module containing your DAO logic
 
 describe("POST /api/tickets", () => {
   it("should create a ticket and return it", async () => {
