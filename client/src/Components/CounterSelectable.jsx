@@ -10,7 +10,7 @@ function CounterSelectable({counter , selectMode, countersSet}) {
     if (!selected) countersSet.add(counter);
     setSelected(!selected);
   }
-  console.log(selectMode)
+  //console.log(selectMode)
   if (!selectMode && selected) {
     setSelected(false);
     countersSet.delete(counter);

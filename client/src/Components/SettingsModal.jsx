@@ -4,18 +4,18 @@ import Modal from '@mui/material/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { SERVICES_MOCK } from '../data_mock';
-function postNewService(serviceInput, servicesSet) {
-  console.log(servicesSet);
-  if (serviceInput.current == null) {
+function postNewService(serviceInput) {
+  if (serviceInput == null) {
     alert('An error occurred, please refresh the page');
     return;
   } 
-  if (serviceInput.current.value.trim() === '') {
+  if (serviceInput.trim() === '') {
     alert('Service name can\'t be empty');
     return;
   }
-  const serviceName = serviceInput.current.value.trim();
+  const serviceName = serviceInput.trim();
   // TODO: post new services to server
+  
 }
 function deleteServices(servicesSet) {
   console.log(servicesSet);
@@ -25,6 +25,7 @@ function deleteServices(servicesSet) {
 function SettingsModal({openSettings, handleCloseSettings}) {
   const servicesSet = new Set();
   const serviceInput = React.useRef(null);
+  const [newService, setNewService] = React.useState();
   return (
     <Modal
     open={openSettings}
@@ -52,8 +53,8 @@ function SettingsModal({openSettings, handleCloseSettings}) {
         <button className="btn" onClick={() => deleteServices(servicesSet)}>Delete Services</button>
       </div>
       <div className="add-service-div">
-        <input ref={serviceInput} type="text" className="add-service-input" placeholder="Service name" />
-        <button className="btn" onClick={() => postNewService(servicesSet)}>Add Service</button>
+        <input ref={serviceInput} type="text" className="add-service-input" onChange={event => {setNewService(event.target.value);}} placeholder="Service name" />
+        <button className="btn" onClick={() => postNewService(newService)}>Add Service</button>
       </div>
     </div>
     </Modal>

@@ -6,6 +6,7 @@ import QueueManagment from './QueManagement.jsx'
 // import NavHeader from './NavBarComponent'; NOT USED
 import API from './API';
 import { LoginComponent, LogoutButton } from './LoginComponent';
+import AdminPage from './AdminPage';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
       <Routes>
         <Route path="/" element={<QueueManagment loggedIn={loggedIn} doLogout={doLogout} user={user} />} />
         <Route path="/login" element={loggedIn ? <Navigate replace to='/' /> : <LoginComponent loginSuccessful={loginSuccessful} setWaiting={setWaiting}></LoginComponent>} />
+        <Route path="/admin" element={<AdminPage />}></Route>
       </Routes>
     </BrowserRouter>
   )

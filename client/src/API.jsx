@@ -39,9 +39,33 @@ async function login(username, password) {
       throw userInfo;
     }
   }
+
+  async function getServices() {
+    const response = await fetch(URL + `/services/`);
+    const services = await response.json();
+    if (response.ok) {
+      return services;
+    }
+    else {
+      throw services;
+    }
+  }
+
+  async function getCounters() {
+    const response = await fetch(URL + `/counters/`);
+    const counters = await response.json();
+    if (response.ok) {
+      return counters;
+    }
+    else {
+      throw counters;
+    }
+  }
   
   const API = {
     getUserInfo,
+    getServices,
+    getCounters,
     login,
     logout
   }
