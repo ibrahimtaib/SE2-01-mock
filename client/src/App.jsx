@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, } from 'react-rout
 import './App.css'
 import QueueManagment from './QueManagement.jsx'
 // import NavHeader from './NavBarComponent'; NOT USED
-import API from './api';
+import API from './apiv2.js';
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { LoginComponent, LogoutButton } from './LoginComponent';
 
@@ -44,7 +44,6 @@ function App() {
       <Routes>
         <Route path="/" element={<QueueManagment loggedIn={loggedIn} doLogout={doLogout} user={user} />} />
         <Route path="/login" element={loggedIn ? <Navigate replace to='/' /> : <LoginComponent loginSuccessful={loginSuccessful} setWaiting={setWaiting}></LoginComponent>} />
-        <Route path="/login" element={<LoginComponent />} />
       </Routes>
     </BrowserRouter>
   )
