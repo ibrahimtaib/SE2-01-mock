@@ -150,7 +150,6 @@ const databaseFunctions = {
             longestQueue = queueLengths[i];
           }
         }
-        // FIXME: Dovremmo mettere status TEXT nel db oppure cambiare lo status in 0 pending, 1 done
         db.get(
           `
           SELECT t.ticketID as TicketID

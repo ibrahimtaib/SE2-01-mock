@@ -4,6 +4,8 @@ import Modal from '@mui/material/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { SERVICES_MOCK } from '../data_mock';
+
+
 function postNewService(serviceInput) {
   if (serviceInput == null) {
     alert('An error occurred, please refresh the page');
@@ -17,15 +19,22 @@ function postNewService(serviceInput) {
   // TODO: post new services to server
   
 }
-function deleteServices(servicesSet) {
-  console.log(servicesSet);
-  const serviceIdArray = Array.from(servicesSet);
-  //TODO: delete services from server
+function deleteServices(servicesToDelete) {
+  //if service to delete is empty display alert
+  //if not cycle this Set (service to delete is a set) and do a post request to API.deleteServices()
+  const servToDeleteArray = Array.from(servicesToDelete);
+  console.log(servToDeleteArray[0].serviceID);
+  // TODO: Add function
 }
-function SettingsModal({openSettings, handleCloseSettings}) {
+
+
+function SettingsModal({services ,openSettings, handleCloseSettings}) {
   const servicesSet = new Set();
   const serviceInput = React.useRef(null);
   const [newService, setNewService] = React.useState();
+  const [servicesToDelete,setServicesToDelete] = React.useState([]);
+
+
   return (
     <Modal
     open={openSettings}
@@ -36,13 +45,13 @@ function SettingsModal({openSettings, handleCloseSettings}) {
     <div className='modal-div'>
       <button className="close-btn" onClick={handleCloseSettings} ><FontAwesomeIcon className='icon' icon={faXmark} /></button>
       <div className="content">
-        {SERVICES_MOCK.map((service) => {return (
+        {services.map((service) => {return (
           <div key={service.serviceId}>
             <input type="checkbox" className="service-checkbox" id={service.serviceId} value={service.id} onChange={
               (e) => {
-                if (e.target.checked) servicesSet.add(service.serviceId);
-                if (!e.target.checked) servicesSet.delete(service.serviceId);
-                console.log(servicesSet);
+                if (e.target.checked) servicesSet.add(service);
+                if (!e.target.checked) servicesSet.delete(service);
+                //console.log(servicesSet); Working!
               }
             }/>
             <label className="service-label" htmlFor={service.serviceId} >{service.name}</label>

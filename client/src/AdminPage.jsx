@@ -31,9 +31,10 @@ function AdminPage() {
       API.getCounters()
       .then((counters) => {
         setCounters(counters);
-        console.log(counters);
       });
   }, []);
+
+  // OK
 
   return (
     <div className='fullscreen-container'>
@@ -46,6 +47,7 @@ function AdminPage() {
           handleClose={handleClose}
           />
           <SettingsModal
+            services={services}
             openSettings={openSettings}
             handleCloseSettings={handleCloseSettings}
           />
