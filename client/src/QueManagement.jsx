@@ -71,6 +71,8 @@ function QueueManagement(props) {
         <h2>Queue Management System</h2>
         {/*<button onClick={()=>setIsMyturn(isMyturn => !isMyturn)} className="btn">MyTurn</button>*/}
         <button style={{ position: 'relative', right: -400, top: -90 }} onClick={() => setIsCounter(isCounter => !isCounter)} className="btn">Switch</button>
+        {props.loggedIn ? <button  style={{ position: 'relative', right: -390, top: -90 }} onClick={props.doLogout} className='btn'>Logout</button>:
+                          <button  style={{ position: 'relative', right: -390, top: -90 }} onClick={event => { event.preventDefault(); navigate("/login"); }} className='btn'>Login</button>}
         <div className="service-selection" style={{ display: buttonDisplay }}>
           <label htmlFor="serviceName">Select Service:</label>
           <select id="serviceName"
