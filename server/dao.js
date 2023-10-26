@@ -8,7 +8,6 @@ const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
 });
 
 const databaseFunctions = {
-
   async getNextCustomer(counterId) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -194,7 +193,7 @@ const databaseFunctions = {
     });
   },
 
-  async createService(serviceName){
+  async createService(serviceName) {
     return new Promise((resolve, reject) => {
       db.run(
         `
@@ -206,11 +205,11 @@ const databaseFunctions = {
           if (err) {
             reject(new Error("Failed to create service."));
           } else {
-          resolve({serviceID: this.lastID, name: serviceName});
+            resolve({ serviceID: this.lastID, name: serviceName });
           }
         }
-      )
-    })
+      );
+    });
   },
 
   /*
@@ -233,62 +232,107 @@ const databaseFunctions = {
       );
     });
   }  */
+  async addServiceToCounter_bis(counters, services) {
+    //counters: array of counterIds
+    //services: array of serviceIds
+    console.log("here");
+    return new Promise((resolve, reject) => {
+      let SQL =
+        "INSERT OR IGNORE INTO config_counters(counterID, serviceID) VALUES ";
 
+      // add multiple values in a single query
+      counters.forEach((counter) => {
+        services.forEach((service) => {
+          SQL += `(${counter}, ${service}),`;
+        });
+      });
+      // remove last comma
+      SQL = SQL.slice(0, -1);
+      db.run(SQL, function (err) {
+        if (err) {
+          reject(new Error("Creation failed"));
+        } else resolve({ message: "Services added successfully!" });
+      });
+    });
+  },
   async addServiceToCounter(counterID, serviceID) {
     return new Promise((resolve, reject) => {
-        db.get('SELECT serviceID FROM config_counters WHERE counterID = ?', counterID, (err, row) => {
-            if (err) {
-                reject(err);
-            } else {
-                let newServiceID;
-                if (row) {
-                    const serviceArray = row.serviceID ? row.serviceID.split(',') : [];
-                    if (!serviceArray.includes(serviceID)) {
-                        newServiceID = row.serviceID ? row.serviceID + ',' + serviceID : serviceID;
-                        db.run('DELETE FROM config_counters WHERE counterID = ?', counterID, (err) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                db.run('INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)', counterID, newServiceID, (err) => {
-                                    if (err) {
-                                        reject(err);
-                                    } else {
-                                        resolve('Row replaced successfully');
-                                    }
-                                });
-                            }
-                        });
-                    } else {
-                        resolve('Service already exists for this counterID');
-                    }
-                } else {
-                    db.run('INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)', counterID, serviceID, (err) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve('Row inserted successfully');
-                        }
-                    });
-                }
-            }
-        });
-    });
-},
-
-async deleteServices(counterID) {
-  return new Promise((resolve, reject) => {
-      db.run(
-        'DELETE FROM config_counters WHERE counterID = ?',
-         [counterID], function (err) {
+      db.get(
+        "SELECT serviceID FROM config_counters WHERE counterID = ?",
+        counterID,
+        (err, row) => {
           if (err) {
-              reject(err);
+            reject(err);
           } else {
-              resolve('success');
+            let newServiceID;
+            if (row) {
+              const serviceArray = row.serviceID
+                ? row.serviceID.split(",")
+                : [];
+              if (!serviceArray.includes(serviceID)) {
+                newServiceID = row.serviceID
+                  ? row.serviceID + "," + serviceID
+                  : serviceID;
+                db.run(
+                  "DELETE FROM config_counters WHERE counterID = ?",
+                  counterID,
+                  (err) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      db.run(
+                        "INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)",
+                        counterID,
+                        newServiceID,
+                        (err) => {
+                          if (err) {
+                            reject(err);
+                          } else {
+                            resolve("Row replaced successfully");
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              } else {
+                resolve("Service already exists for this counterID");
+              }
+            } else {
+              db.run(
+                "INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)",
+                counterID,
+                serviceID,
+                (err) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve("Row inserted successfully");
+                  }
+                }
+              );
+            }
           }
-      });
-  });
-}
+        }
+      );
+    });
+  },
 
-}
+  async deleteServices(counterID) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        "DELETE FROM config_counters WHERE counterID = ?",
+        [counterID],
+        function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve("success");
+          }
+        }
+      );
+    });
+  },
+};
 
 module.exports = databaseFunctions;
