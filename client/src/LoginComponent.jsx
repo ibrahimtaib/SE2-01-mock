@@ -1,4 +1,4 @@
-import API from './api';
+import API from './API';
 import React, { useState } from 'react';
 import './App.css'
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
@@ -44,7 +44,7 @@ function LoginComponent(props) {
                                                 placeholder="Username"
                                                 value={username}
                                                 autoFocus
-                                                onChange={event => { setUsername(event.target.value); setUsernameValid(true); }} />
+                                                onChange={event => { setUsername(event.target.value); }} />
                                         </Form.Group>
                                     </Row>
                                     <br></br>
@@ -54,7 +54,7 @@ function LoginComponent(props) {
                                                 type="password"
                                                 placeholder="Password"
                                                 value={password}
-                                                onChange={event => { setPassword(event.target.value); setPasswordValid(true); }} />
+                                                onChange={event => { setPassword(event.target.value); }} />
                                         </Form.Group>
                                     </Row>
                                     <br></br>

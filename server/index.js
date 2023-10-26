@@ -20,7 +20,8 @@ const isLoggedIn = (req, res, next) => {
 passport.use(
   new LocalStrategy(function (username, password, done) {
     dao.getUser(username, password).then((user) => {
-      if (!user) return done(null, false, { message: "user or psw wrong" });
+      if (!user)
+        return done(null, false, { message: "Username o password errata!" });
       return done(null, user);
     });
   })
@@ -198,6 +199,17 @@ app.get("/api/services", async (req, res) => {
 app.get("/api/counters", async (req, res) => {
   try {
     const result = await dao.getCounters();
+    if (result.error) res.status(404).json(result);
+    else res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/api/next/:counterId", async (req, res) => {
+  try {
+    const counterId = req.params.counterId;
+    const result = await dao.getNextCustomer(counterId);
     if (result.error) res.status(404).json(result);
     else res.json(result);
   } catch (err) {

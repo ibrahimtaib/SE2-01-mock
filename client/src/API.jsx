@@ -39,57 +39,11 @@ async function login(username, password) {
       throw userInfo;
     }
   }
-
-  async function getTicket(serviceId){
-    const response = await fetch(URL+'/api/tickets',{
-        method:'POST',
-        credentials:'include',
-        body: JSON.stringify({ serviceId }),
-    })
-    const ticket = response.json();
-    if (response.ok) {
-        return ticket;
-      } else {
-        throw ticket;
-      }
-
-  }
-
-  async function getServices(){
-    const response = await fetch(URL+'/api/services',{
-        method:'GET',
-        credentials:'include'
-    })
-    const services = response.json();
-    if (response.ok) {
-        return services;
-      } else {
-        throw services;
-      }
-
-  }
-
-  async function getNextCostumer(counterId){
-    const response = await fetch(URL+'/api/next',{
-        method:'POST',
-        credentials:'include',
-        body: JSON.stringify({ counterId }),
-    })
-    const services = response.json();
-    if (response.ok) {
-        return services;
-      } else {
-        throw services;
-      }
-  }
   
   const API = {
     getUserInfo,
     login,
-    logout,
-    getServices,
-    getTicket,
-    getNextCostumer,
+    logout
   }
   
   export default API;
