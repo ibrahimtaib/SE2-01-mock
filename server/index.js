@@ -79,4 +79,22 @@ app.get('/api/sessions/current', (req, res) => {
     res.status(401).json({ error: 'Unauthenticated user!' });;
 });
 
+
+app.get('/api/nextcustomer/:counterId', async (req, res) => {
+  const counterId = req.params.counterId;
+  try {
+
+    const customer = await getNextCustomer(counterId);
+    if (customer) {
+      res.status(200).json(customer);
+    } else {
+      res.status(404).json({ error: 'Nessun cliente disponibile.' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Errore durante la richiesta del prossimo cliente.' });
+  }
+
+});
+
+
 ///*  API Website  *///

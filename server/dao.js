@@ -6,6 +6,7 @@ const sqlite = require('sqlite3');
 const db = new sqlite.Database('se2-01-mock.sqlite', (err) => {
   if(err) throw err;
 });
+
 async function getNextCustomer(counterId) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -15,11 +16,6 @@ async function getNextCustomer(counterId) {
         resolve(null);
         return;
       }
-
-      // Qua si deve ancora creare l'azzeramento della lista ogni giorno
-      // if (UnNuovoGiorno()) {
-      //   await resetQueues();
-      // }
 
       const queueLengths = await getQueueLengths(supportedServiceTypes);
 
@@ -111,5 +107,20 @@ async function getQueueLengths(supportedServiceTypes) {
     }
   });
 }
+
+async function resetQueues() {
+  try {
+    // Da valutare se eliminare tutti gli elementi o cambiare semplicemente lo status in modo da non eliminare i dati
+    // Devo ancora creare un timer che scade a mezzanotte che fa partire resetQueues
+    db.run(`
+      DELETE FROM tickets
+    `);
+
+    console.log('Code azzerate con successo.');
+  } catch (error) {
+    console.error('Errore azzeramento delle code:', error);
+  }
+}
+
 
 
