@@ -255,6 +255,16 @@ const databaseFunctions = {
       });
     });
   },
+
+  async deleteServiceFromCounter_bis(counters, services) {
+    const SQL = `DELETE FROM config_counters WHERE counterID IN (${counters}) AND serviceID IN (${services})`;
+    return new Promise((resolve, reject) => {
+      db.run(SQL, function (err) {
+        if (err) reject(new Error("Deletion failed"));
+        else resolve({ message: "Services removed successfully!" });
+      });
+    });
+  },
   async addServiceToCounter(counterID, serviceID) {
     return new Promise((resolve, reject) => {
       db.get(

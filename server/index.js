@@ -161,6 +161,28 @@ app.post("/api/counters/services", async (req, res) => {
       .json({ error: "An error occurred during the request" });
   }
 });
+
+app.delete("/api/counters/services", async (req, res) => {
+  const { counters, services } = req.body;
+  if (counters == undefined || services == undefined)
+    return res
+      .status(400)
+      .json({ error: "counters and services should be in the request's body" });
+  if (!Array.isArray(counters) || !Array.isArray(services))
+    return res
+      .status(400)
+      .json({ error: "counters and services should be arrays" });
+  try {
+    const result = await dao.deleteServiceFromCounter_bis(counters, services);
+    if (result.error) res.status(500).json(result.error);
+    else res.json(result);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ error: "An error occurred during the request" });
+  }
+});
 //Get All Services
 app.get("/api/services", async (req, res) => {
   try {
