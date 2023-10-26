@@ -5,7 +5,6 @@ const api = axios.create({
   withCredentials: true
 });
 
-///* API LOGIN *///
 
 export async function login(username, password) {
     let response = await api.post('/sessions', { username, password });
@@ -18,11 +17,11 @@ export async function login(username, password) {
     }
   }
   
-  export async function logout() {
+export async function logout() {
     await api.delete('/sessions/current')
   }
   
-  export async function getUserInfo() {
+export async function getUserInfo() {
     const response = await api.get('/sessions/current');
     const userInfo = await response.json();
     if (response.ok) {
@@ -32,7 +31,7 @@ export async function login(username, password) {
     }
   }
 
-  export async function getTicket(serviceId){
+export async function getTicket(serviceId){
     const response = await api.post('/api/tickets',{ serviceId });
     const ticket = response.json();
     if (response.ok) {
@@ -43,7 +42,7 @@ export async function login(username, password) {
 
   }
 
-  export async function getServices(){
+export async function getServices(){
     const response = await api.get('/api/services')
     const services = response.json();
     if (response.ok) {
@@ -54,7 +53,7 @@ export async function login(username, password) {
 
   }
 
-  export async function getCounters(){
+export async function getCounters(){
     const response = await api.get('/api/counters')
     const counters = response.json();
     if (response.ok) {
@@ -65,7 +64,7 @@ export async function login(username, password) {
 
   }
 
-  export async function getNextCostumer(counterId){
+export async function getNextCostumer(counterId){
     const response = await api.post('/api/next',{ counterId });
     const services = response.json();
     if (response.ok) {
