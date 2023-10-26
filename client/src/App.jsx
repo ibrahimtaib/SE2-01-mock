@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, } from 'react-rout
 import './App.css'
 import QueueManagment from './QueManagement.jsx'
 // import NavHeader from './NavBarComponent'; NOT USED
-import API from './apiv2';
+import API from './API';
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { LoginComponent, LogoutButton } from './LoginComponent';
 

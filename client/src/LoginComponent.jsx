@@ -1,4 +1,4 @@
-import API from './api';
+import API from './API';
 import React, { useState } from 'react';
 import './App.css'
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
