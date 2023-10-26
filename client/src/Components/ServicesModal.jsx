@@ -16,6 +16,7 @@ function ServicesModal({countersSet, selectMode, open, handleClose}) {
     aria-describedby="modal-modal-description"
 >
     <div className='modal-div'>
+      <h1>Select services to add to counters</h1>
       <button className="close-btn" onClick={handleClose} ><FontAwesomeIcon className='icon' icon={faXmark} /></button>
       <div className="content">
         {SERVICES_MOCK.map((service) => {return (
