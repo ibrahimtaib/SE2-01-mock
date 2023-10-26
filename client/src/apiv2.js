@@ -66,13 +66,13 @@ export async function getCounters(){
   }
 
 export async function getNextCostumer(counterId){
-    const response = await api.get('/api/next',{ counterId });
-    const costumer = response.json();
-    if (response.ok) {
-        return costumer;
-      } else {
-        throw costumer;
-      }
+  try {
+    const response = await api.get(`/api/next/${counterId}`);
+    const costumer = response.data;
+    return costumer;
+  } catch (error) {
+    throw error
+  }
 }
 
 

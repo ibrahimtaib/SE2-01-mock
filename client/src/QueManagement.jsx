@@ -38,7 +38,8 @@ function QueueManagement({loggedIn, doLogout, user, ...props}) {
 
   const serveNext = async (counterId) => {
     setResponseCounter(counterId)
-    
+    const response_2 = await getNextCostumer(counterId)
+    console.log('response for getNextCostumer : ', response_2)
     const response = MOCK_GET_NEXT_CUSTOMER
     const updatedCounters = counters.map((counter) => {
       if (counter.id === counterId) {
