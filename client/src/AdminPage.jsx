@@ -3,6 +3,9 @@ import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import CounterSelectable from './Components/CounterSelectable';
 import { COUNTERS_MOCK } from './data_mock';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+
 function AdminPage() {
   const [selectMode, toggleSelectMode] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -20,7 +23,14 @@ function AdminPage() {
                 aria-describedby="modal-modal-description"
         >
           <div className='modal-div'>
+            <button className="close-btn" onClick={handleClose} ><FontAwesomeIcon className='icon' icon={faXmark} /></button>
+            <div className="content">
             {COUNTERS_MOCK.map((counter) => <CounterSelectable key={counter.counterId} counter={counter} selectMode={selectMode} countersSet={countersSet}/>)}
+            </div> 
+            <div className='buttons'>
+            <button className="btn" disabled={!selectMode} onClick={handleOpen} >Add Services</button>
+            <button className="btn" disabled={!selectMode} >Delete Services</button>
+            </div>
           </div>
         </Modal>
         <h1>Administration System</h1>
