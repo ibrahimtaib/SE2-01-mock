@@ -1,58 +1,13 @@
 "use strict";
 
 const sqlite = require("sqlite3");
-const crypto = require('crypto');
 
 // open the database
 const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
   if (err) throw err;
 });
 
-
-
-
 const databaseFunctions = {
-
-  ///* EOF Login Functions */
-
-  async getUser(username, password) {
-    return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM users WHERE username = ?';
-      db.get(sql, [username], (err, row) => {
-        if (err) { reject(err); }
-        else if (row === undefined) { resolve(false); }
-        else {
-          const user = { userID: row.userID, username: row.username, role: row.role };
-          const salt = row.salt;
-          crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
-            if (err) reject(err);
-            const passwordHex = Buffer.from(row.hash, 'hex');
-            if (!crypto.timingSafeEqual(passwordHex, hashedPassword))
-              resolve(false);
-            else resolve(user);
-          });
-        }
-      });
-    });
-  },
-
-  async getUserById(id) {
-    return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM users WHERE userID = ?';
-      db.get(sql, [id], (err, row) => {
-        if (err)
-          reject(err);
-        else if (row === undefined)
-          resolve({ error: 'Utente non trovato.' });
-        else {
-          const user = { userID: row.userID, username: row.username, role: row.role }
-          resolve(user);
-        }
-      });
-    });
-  },
-
-  ///* Start of OQM functions */
 
   async getNextCustomer(counterId) {
     return new Promise(async (resolve, reject) => {
@@ -197,19 +152,23 @@ const databaseFunctions = {
     return new Promise((resolve, reject) => {
       db.all(
         `
-      SELECT *, GROUP_CONCAT(services.name,', ') as services_list
-      FROM counters
-      JOIN services ON counters.serviceID = services.serviceID
+      SELECT counterID, GROUP_CONCAT(services.serviceID,', ') as services_list, officerID
+      FROM config_counters
+      JOIN services ON config_counters.serviceID = services.serviceID
       GROUP BY counterID
       `,
         [],
         (err, rows) => {
           if (err) {
+            console.log(err);
             reject(new Error("Failed to get counters."));
-          } else if (rows.length == 0) {
-            resolve({ error: "No counters found." });
           } else {
-            resolve(rows);
+            resolve(
+              rows.map((row) => ({
+                counterId: row.counterID,
+                services: row.services_list.split(", "),
+              }))
+            );
           }
         }
       );
@@ -234,6 +193,102 @@ const databaseFunctions = {
       );
     });
   },
-};
+
+  async createService(serviceName){
+    return new Promise((resolve, reject) => {
+      db.run(
+        `
+        INSERT INTO services (name) 
+        VALUES (?)
+        `,
+        [serviceName],
+        function (err) {
+          if (err) {
+            reject(new Error("Failed to create service."));
+          } else {
+          resolve({serviceID: this.lastID, name: serviceName});
+          }
+        }
+      )
+    })
+  },
+
+  /*
+  async addServiceToCounter(counterID, serviceID) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        `
+        INSERT OR IGNORE INTO config_counters(counterID, serviceID)
+        VALUES (?, ?)
+        `,
+        [counterID, serviceID],
+        function (err) {
+          if (err) {
+            console.error(err);
+            reject(new Error("Failed."));
+          } else(
+            resolve({ counterID: counterID, serviceID: serviceID })
+            );
+        }
+      );
+    });
+  }  */
+
+  async addServiceToCounter(counterID, serviceID) {
+    return new Promise((resolve, reject) => {
+        db.get('SELECT serviceID FROM config_counters WHERE counterID = ?', counterID, (err, row) => {
+            if (err) {
+                reject(err);
+            } else {
+                let newServiceID;
+                if (row) {
+                    const serviceArray = row.serviceID ? row.serviceID.split(',') : [];
+                    if (!serviceArray.includes(serviceID)) {
+                        newServiceID = row.serviceID ? row.serviceID + ',' + serviceID : serviceID;
+                        db.run('DELETE FROM config_counters WHERE counterID = ?', counterID, (err) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                db.run('INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)', counterID, newServiceID, (err) => {
+                                    if (err) {
+                                        reject(err);
+                                    } else {
+                                        resolve('Row replaced successfully');
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        resolve('Service already exists for this counterID');
+                    }
+                } else {
+                    db.run('INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)', counterID, serviceID, (err) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve('Row inserted successfully');
+                        }
+                    });
+                }
+            }
+        });
+    });
+},
+
+async deleteServices(counterID) {
+  return new Promise((resolve, reject) => {
+      db.run(
+        'DELETE FROM config_counters WHERE counterID = ?',
+         [counterID], function (err) {
+          if (err) {
+              reject(err);
+          } else {
+              resolve('success');
+          }
+      });
+  });
+}
+
+}
 
 module.exports = databaseFunctions;

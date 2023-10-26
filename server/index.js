@@ -110,6 +110,33 @@ app.post("/api/tickets", (req, res) => {
     });
 });
 
+
+//Create a service
+app.post("/api/service", (req, res) => {
+  const { serviceName} = req.body;
+
+  if (!serviceName) {
+    return res.status(400).json({ error: 'Service name is required!' });
+  }
+  dao
+    .createService(serviceName)
+    .then(result => res.json(result))
+    .catch(err => res.status(500).json({ error: 'An error occurred while creating the service.' }));
+});
+
+//add a service to a counter
+app.post("/api/config_counters", async (req, res) => {
+const {counterID, serviceID} = req.body;
+  try {
+    const result = await dao.addServiceToCounter(counterID, serviceID)
+    if (result.error) res.status(404).json(result);
+    else res.json(result);
+  } catch (err) {
+    res.status(500).end();
+  }
+}
+)
+
 //Get All Services
 app.get("/api/services", async (req, res) => {
   try {
@@ -131,6 +158,28 @@ app.get("/api/counters", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
+/*delete all services of a counter
+app.delete('/api/delete_services/:counterID', async (req, res) => {
+  try {
+      const result = await dao.deleteServices(counterID);
+      res.json(result);
+  } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});*/
+
+//da correggere
+app.delete('/api/delete_services',  async (req, res) => {
+    try {
+      await dao.deleteServices(counterID);
+      res.json({});
+    } catch (err) {
+      res.status(500).json({ error: `Internal Server Error` });
+    }
+  });
+
 
 ///*  API Website  *///
 app.listen(port, () => {
