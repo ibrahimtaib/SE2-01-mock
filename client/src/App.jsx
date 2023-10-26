@@ -1,39 +1,51 @@
 import { useState, useEffect, useContext } from 'react'
-import { BrowserRouter, Routes, Route, Outlet, useNavigate, Navigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-  import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, } from 'react-router-dom';
+
 import './App.css'
 import QueueManagment from './QueManagement.jsx'
+// import NavHeader from './NavBarComponent'; NOT USED
+import API from './api';
+import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import { LoginComponent, LogoutButton } from './LoginComponent';
 
 
 function App() {
-  // const [count, setCount] = useState(0)
-  // const [services, setServices] = useState([])
-  // const [counters, setCounters] = useState([])
+  const [user, setUser] = useState(undefined);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [waiting, setWaiting] = useState(false);
 
-
-  const joinQueue = () => {
-    console.log('joinQueue')
+  const doLogout = async () => {
+    await API.logout();
+    setLoggedIn(false);
+    setUser(undefined);
   }
 
-  const serveNext = (counterId) => {
-    console.log('serveNext', counterId)
+  const loginSuccessful = (user) => {
+    setLoggedIn(true);
+    setUser(user);
   }
+
+  useEffect(() => {
+
+    API.getUserInfo()
+      .then(user => {
+        loginSuccessful(user);
+      })
+      .catch(err => {
+        //
+      });
+    setTimeout(() => setWaiting(false), 1000);
+  }, []);
 
 
 
   return (
     <BrowserRouter>
-      <Main />
+      <Routes>
+        <Route path="/" element={<QueueManagment loggedIn={loggedIn} doLogout={doLogout} user={user} />} />
+        <Route path="/login" element={loggedIn ? <Navigate replace to='/' /> : <LoginComponent loginSuccessful={loginSuccessful} setWaiting={setWaiting}></LoginComponent>} />
+      </Routes>
     </BrowserRouter>
-  )
-}
-
-function Main() {
-  return (
-    <Routes>
-      <Route path="/" element={<QueueManagment />} />
-    </Routes>
   )
 }
 
