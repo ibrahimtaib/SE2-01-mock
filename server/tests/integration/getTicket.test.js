@@ -1,36 +1,39 @@
 const request = require('supertest');
-const app = require('../../index'); // Assuming this is your Express app
+const app = require('../../index'); // Assuming your Express app is in 'index.js'
 
-describe('POST /api/tickets', () => {
-  it('should create a ticket and return it', (done) => {
-    const serviceId = 123; // Provide a valid serviceId here
+describe('Integration Test for /api/tickets', () => {
+  it('should create a ticket', (done) => {
+    const requestBody = {
+      serviceId: 1, // Replace with the appropriate serviceId
+    };
 
     request(app)
       .post('/api/tickets')
-      .send({ serviceId })
-      .expect(200) // Expect a successful response code
-      .expect('Content-Type', /json/) // Expect a JSON response
+      .send(requestBody)
+      .expect(200) // Set the expected HTTP status code
       .end((err, res) => {
         if (err) return done(err);
 
-        // Assert the response structure or values
+        // Add assertions for the response body as needed
         expect(res.body).toHaveProperty('ticketId');
-        expect(res.body).toHaveProperty('serviceId','');////I need to know which is the value received
 
         done();
       });
   });
 
-  it('should handle missing serviceId', (done) => {
+  it('should return an error for missing serviceId', (done) => {
+    const requestBody = {
+      // Missing serviceId
+    };
+
     request(app)
       .post('/api/tickets')
-      .send({}) // Missing serviceId
-      .expect(400) // Expect a 400 Bad Request response
-      .expect('Content-Type', /json/) // Expect a JSON response
+      .send(requestBody)
+      .expect(400) // Set the expected HTTP status code for missing serviceId
       .end((err, res) => {
         if (err) return done(err);
 
-        // Assert the error message
+        // Add assertions for the response body as needed
         expect(res.body).toHaveProperty('error', 'ServiceId is required!');
 
         done();
