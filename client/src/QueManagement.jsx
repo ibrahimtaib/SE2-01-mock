@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import { getNextCostumer, getTicket } from './apiv2.js';
 import { SERVICES_MOCK, COUNTERS_MOCK, TICKETS_MOCK } from './data_mock.js'
 import Counter from './Components/Counter.jsx'
 import Timer from './Components/Timer.jsx'
@@ -12,7 +13,6 @@ const MOCK_GET_NEXT_CUSTOMER = {
 function QueueManagement({loggedIn, doLogout, user, ...props}) {
   const navigate = useNavigate();
   // const [count, setCount] = useState(0)
-  // TODO: Set states with database entries in App.jsx
   const [services, setServices] = useState(SERVICES_MOCK)
   const [counters, setCounters] = useState(COUNTERS_MOCK)
   const [responseCounter, setResponseCounter] = useState(1)
@@ -25,38 +25,30 @@ function QueueManagement({loggedIn, doLogout, user, ...props}) {
   const buttonDisplay = isTicket || isCounter ? 'none' : 'flex';
 
 
-  const GetTicket = (selectedService) => {
-    setTimeout(() => {
-      const serviceId = services.find((service) => service.name === selectedService).id
+  const GetTicket = async (selectedService) => {
+    
+    const serviceId = services.find((service) => service.name === selectedService).id
+    const response = await getTicket(serviceId);
+    console.log('response for getTicket : ', response)
 
-      //call getTicket from server with selectedService.id
-      const response = { id: 5, service: 3 }
-      setIsTicket(isTicket => !isTicket)
-      setCurrentTicket(response)
-      console.log('currentTicket', currentTicket)
-    }, 2000)
+    setIsTicket(isTicket => !isTicket)
+    setCurrentTicket(response)
+    console.log('currentTicket', currentTicket)
   }
 
   const serveNext = async (counterId) => {
-
     setResponseCounter(counterId)
-    // call getNextCostumer from server
-    setTimeout(() => {
-      const response = MOCK_GET_NEXT_CUSTOMER
-      const updatedCounters = counters.map((counter) => {
-        if (counter.id === counterId) {
-          counter.currentTicketId = response.ticketId
-        }
-        return counter
-      })
-      setCounters(updatedCounters)
-      // check if it's my turn
-      setIsMyturn(response.ticketId === currentTicket.id)
-    }, 2000)
-
-
-
-
+    
+    const response = MOCK_GET_NEXT_CUSTOMER
+    const updatedCounters = counters.map((counter) => {
+      if (counter.id === counterId) {
+        counter.currentTicketId = response.ticketId
+      }
+      return counter
+    })
+    setCounters(updatedCounters)
+    // check if it's my turn
+    setIsMyturn(response.ticketId === currentTicket.id)
   }
 
 
@@ -88,7 +80,7 @@ function QueueManagement({loggedIn, doLogout, user, ...props}) {
         {isTicket && !isMyturn ?
           <div className="new-customer-info">
             <h3>Your Estimated Waiting Time is : <Timer duration={10} /> minutes</h3>
-            <h3>Your Ticket Number is : <span id="ticketNumber">{currentTicket.id}</span> In Queue for {selectedService} </h3>
+            <h3>Your Ticket Number is : <span id="ticketNumber">{currentTicket.ticketId}</span> In Queue for {selectedService} </h3>
           </div> : isMyturn ?
             <div>
               <h1>It is your turn!</h1>
