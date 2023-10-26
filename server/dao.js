@@ -1,14 +1,14 @@
 "use strict";
 
 const sqlite = require("sqlite3");
-const crypto = require('crypto');
 
 // open the database
 const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
   if (err) throw err;
 });
 
- db.exec(`DELETE FROM user;
+db.exec(
+  `DELETE FROM user;
           DELETE FROM config_counters;
           DELETE FROM tickets;
           DELETE FROM services;
@@ -64,31 +64,35 @@ const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
         VALUES(3, 3, 8, 0);
         INSERT INTO tickets(ticketID, serviceID, userID, status)
         VALUES(4, 4, 9, 0);
-         `, function(err) {
-  if (err) {
-    console.error(err.message);
+         `,
+  function (err) {
+    if (err) {
+      console.error(err.message);
+    }
   }
-}); 
-
-
-
+);
 
 const databaseFunctions = {
-
   ///* EOF Login Functions */
 
   async getUser(username, password) {
     return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM user WHERE username = ?';
+      const sql = "SELECT * FROM user WHERE username = ?";
       db.get(sql, [username], (err, row) => {
-        if (err) { reject(err); }
-        else if (row === undefined) { resolve(false); }
-        else {
-          const user = { userID: row.userID, username: row.username, role: row.role };
+        if (err) {
+          reject(err);
+        } else if (row === undefined) {
+          resolve(false);
+        } else {
+          const user = {
+            userID: row.userID,
+            username: row.username,
+            role: row.role,
+          };
           const salt = row.salt;
           crypto.scrypt(password, salt, 32, (err, hashedPassword) => {
             if (err) reject(err);
-            const passwordHex = Buffer.from(row.hash, 'hex');
+            const passwordHex = Buffer.from(row.hash, "hex");
             if (!crypto.timingSafeEqual(passwordHex, hashedPassword))
               resolve(false);
             else resolve(user);
@@ -100,14 +104,16 @@ const databaseFunctions = {
 
   async getUserById(id) {
     return new Promise((resolve, reject) => {
-      const sql = 'SELECT * FROM user WHERE userID = ?';
+      const sql = "SELECT * FROM user WHERE userID = ?";
       db.get(sql, [id], (err, row) => {
-        if (err)
-          reject(err);
-        else if (row === undefined)
-          resolve({ error: 'Utente non trovato.' });
+        if (err) reject(err);
+        else if (row === undefined) resolve({ error: "Utente non trovato." });
         else {
-          const user = { userID: row.userID, username: row.username, role: row.role }
+          const user = {
+            userID: row.userID,
+            username: row.username,
+            role: row.role,
+          };
           resolve(user);
         }
       });
@@ -267,10 +273,9 @@ const databaseFunctions = {
         [],
         (err, rows) => {
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new Error("Failed to get counters."));
           } else {
-            console.log(rows);
             resolve(
               rows.map((row) => ({
                 counterId: row.counterID,
@@ -298,6 +303,157 @@ const databaseFunctions = {
             reject(new Error("Failed to create ticket."));
           } else {
             resolve({ ticketId: this.lastID, serviceId });
+          }
+        }
+      );
+    });
+  },
+
+  async createService(serviceName) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        `
+        INSERT INTO services (name) 
+        VALUES (?)
+        `,
+        [serviceName],
+        function (err) {
+          if (err) {
+            reject(new Error("Failed to create service."));
+          } else {
+            resolve({ serviceID: this.lastID, name: serviceName });
+          }
+        }
+      );
+    });
+  },
+
+  /*
+  async addServiceToCounter(counterID, serviceID) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        `
+        INSERT OR IGNORE INTO config_counters(counterID, serviceID)
+        VALUES (?, ?)
+        `,
+        [counterID, serviceID],
+        function (err) {
+          if (err) {
+            console.error(err);
+            reject(new Error("Failed."));
+          } else(
+            resolve({ counterID: counterID, serviceID: serviceID })
+            );
+        }
+      );
+    });
+  }  */
+  async addServiceToCounter_bis(counters, services) {
+    //counters: array of counterIds
+    //services: array of serviceIds
+    console.log("here");
+    return new Promise((resolve, reject) => {
+      let SQL =
+        "INSERT OR IGNORE INTO config_counters(counterID, serviceID) VALUES ";
+
+      // add multiple values in a single query
+      counters.forEach((counter) => {
+        services.forEach((service) => {
+          SQL += `(${counter}, ${service}),`;
+        });
+      });
+      // remove last comma
+      SQL = SQL.slice(0, -1);
+      db.run(SQL, function (err) {
+        if (err) {
+          reject(new Error("Creation failed"));
+        } else resolve({ message: "Services added successfully!" });
+      });
+    });
+  },
+
+  async deleteServiceFromCounter_bis(counters, services) {
+    const SQL = `DELETE FROM config_counters WHERE counterID IN (${counters}) AND serviceID IN (${services})`;
+    return new Promise((resolve, reject) => {
+      db.run(SQL, function (err) {
+        if (err) reject(new Error("Deletion failed"));
+        else resolve({ message: "Services removed successfully!" });
+      });
+    });
+  },
+  async addServiceToCounter(counterID, serviceID) {
+    return new Promise((resolve, reject) => {
+      db.get(
+        "SELECT serviceID FROM config_counters WHERE counterID = ?",
+        counterID,
+        (err, row) => {
+          if (err) {
+            reject(err);
+          } else {
+            let newServiceID;
+            if (row) {
+              const serviceArray = row.serviceID
+                ? row.serviceID.split(",")
+                : [];
+              if (!serviceArray.includes(serviceID)) {
+                newServiceID = row.serviceID
+                  ? row.serviceID + "," + serviceID
+                  : serviceID;
+                db.run(
+                  "DELETE FROM config_counters WHERE counterID = ?",
+                  counterID,
+                  (err) => {
+                    if (err) {
+                      reject(err);
+                    } else {
+                      db.run(
+                        "INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)",
+                        counterID,
+                        newServiceID,
+                        (err) => {
+                          if (err) {
+                            reject(err);
+                          } else {
+                            resolve("Row replaced successfully");
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              } else {
+                resolve("Service already exists for this counterID");
+              }
+            } else {
+              db.run(
+                "INSERT INTO config_counters (counterID, serviceID) VALUES (?, ?)",
+                counterID,
+                serviceID,
+                (err) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve("Row inserted successfully");
+                  }
+                }
+              );
+            }
+          }
+        }
+      );
+    });
+  },
+
+  async deleteServices(counterID) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        "DELETE FROM config_counters WHERE counterID = ?",
+        [counterID],
+        function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve("success");
           }
         }
       );

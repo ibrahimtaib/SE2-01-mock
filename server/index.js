@@ -8,6 +8,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
 const cors = require("cors");
 const { body, validationResult } = require("express-validator");
+const { application } = require("express");
 ///* API Login *///
 
 const isLoggedIn = (req, res, next) => {
@@ -110,6 +111,79 @@ app.post("/api/tickets", (req, res) => {
     });
 });
 
+//Create a service
+app.post("/api/service", (req, res) => {
+  const { serviceName } = req.body;
+
+  if (!serviceName) {
+    return res.status(400).json({ error: "Service name is required!" });
+  }
+  dao
+    .createService(serviceName)
+    .then((result) => res.json(result))
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ error: "An error occurred while creating the service." })
+    );
+});
+
+//add a service to a counter
+app.post("/api/config_counters", async (req, res) => {
+  const { counterID, serviceID } = req.body;
+  try {
+    const result = await dao.addServiceToCounter(counterID, serviceID);
+    console.log(result);
+    if (result.error) res.status(404).json(result);
+    else res.json(result);
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+//add a lot of services to a lot of counters
+app.post("/api/counters/services", async (req, res) => {
+  const { counters, services } = req.body;
+  if (counters == undefined || services == undefined)
+    return res
+      .status(400)
+      .json({ error: "counters and services should be in the request's body" });
+  if (!Array.isArray(counters) || !Array.isArray(services))
+    return res
+      .status(400)
+      .json({ error: "counters and services should be arrays" });
+  try {
+    const result = await dao.addServiceToCounter_bis(counters, services);
+    if (result.error) res.status(500).json(result.error);
+    else res.json(result);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ error: "An error occurred during the request" });
+  }
+});
+
+app.delete("/api/counters/services", async (req, res) => {
+  const { counters, services } = req.body;
+  if (counters == undefined || services == undefined)
+    return res
+      .status(400)
+      .json({ error: "counters and services should be in the request's body" });
+  if (!Array.isArray(counters) || !Array.isArray(services))
+    return res
+      .status(400)
+      .json({ error: "counters and services should be arrays" });
+  try {
+    const result = await dao.deleteServiceFromCounter_bis(counters, services);
+    if (result.error) res.status(500).json(result.error);
+    else res.json(result);
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ error: "An error occurred during the request" });
+  }
+});
 //Get All Services
 app.get("/api/services", async (req, res) => {
   try {
@@ -122,34 +196,46 @@ app.get("/api/services", async (req, res) => {
 });
 
 //Get All Counters
-app.get('/api/counters',
-  async (req, res) => {
-    try {
-      const result = await dao.getCounters();
-      if (result.error)
-        res.status(404).json(result);
-      else
-        res.json(result);
-    } catch (err) {
-      res.status(500).json({ error: "Internal Server Error" });
-    }
+app.get("/api/counters", async (req, res) => {
+  try {
+    const result = await dao.getCounters();
+    if (result.error) res.status(404).json(result);
+    else res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
-);
+});
 
-app.get('/api/next/:counterId',
-  async (req, res) => {
-    try {
-      const counterId = req.params.counterId;
-      const result = await dao.getNextCustomer(counterId);
-      if (result.error)
-        res.status(404).json(result);
-      else
-        res.json(result);
-    } catch (err) {
-      res.status(500).json({ error: "Internal Server Error" });
-    }
+app.get("/api/next/:counterId", async (req, res) => {
+  try {
+    const counterId = req.params.counterId;
+    const result = await dao.getNextCustomer(counterId);
+    if (result.error) res.status(404).json(result);
+    else res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
-);
+});
+
+/*delete all services of a counter
+app.delete('/api/delete_services/:counterID', async (req, res) => {
+  try {
+      const result = await dao.deleteServices(counterID);
+      res.json(result);
+  } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});*/
+
+//da correggere
+app.delete("/api/delete_services", async (req, res) => {
+  try {
+    await dao.deleteServices(counterID);
+    res.json({});
+  } catch (err) {
+    res.status(500).json({ error: `Internal Server Error` });
+  }
+});
 
 ///*  API Website  *///
 app.listen(port, () => {

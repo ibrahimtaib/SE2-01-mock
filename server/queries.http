@@ -1,0 +1,43 @@
+###
+GET http://localhost:3001/api/services HTTP/1.1
+###
+
+###
+GET http://localhost:3001/api/counters HTTP/1.1
+###
+
+
+###
+POST http://localhost:3001/api/tickets HTTP/1.1
+content-type: application/json
+
+{
+    "serviceId": "3"
+}
+###
+
+###
+POST http://localhost:3001/api/service HTTP/1.1
+content-type: application/json
+
+{
+    "serviceName": "Servizio"
+}
+###
+POST http://localhost:3001/api/config_counters HTTP/1.1
+content-type: application/json
+
+{   
+    "counterID": "6",
+    "serviceID": "2"
+}
+
+###
+DELETE http://localhost:3001/api/delete_services HTTP/1.1
+Content-Type: application/json
+
+{
+    "counterID": "4"
+}
+
+
