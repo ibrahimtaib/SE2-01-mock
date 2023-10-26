@@ -10,14 +10,19 @@ function CounterSelectable({counter , selectMode, countersSet}) {
     if (!selected) countersSet.add(counter);
     setSelected(!selected);
   }
-  console.log(countersSet)
+  console.log(selectMode)
   if (!selectMode && selected) {
     setSelected(false);
     countersSet.delete(counter);
   }
   return (
     <div className={(selected && selectMode?" counter-selected":"counter-unselected")}
-        style={{animation: selectMode&&!selected?"trembling 0.3s ease infinite":"none"}}
+        style={
+          {
+            animation: selectMode&&!selected?"trembling 0.3s ease infinite":"none",
+            pointerEvents: !selectMode?"none":"initial",
+          }}
+        
         onClick={toggleSelected}>
         <FontAwesomeIcon className="counter-icon" icon={faUser} />
         <div className="counter-number"style={{fontSize:'20px', marginTop: '20px'}}>{counter.counterId}</div>

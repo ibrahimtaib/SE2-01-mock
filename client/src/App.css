@@ -134,6 +134,9 @@ h1 {
 .counter {
   animation: zoomIn 0.8s 1 ease;
 }
+.counter-unselected:hover, .counter-selected:hover {
+  cursor: pointer;
+}
 .counter-unselected {
   --box-shadow-clr: rgba(0, 0, 0, 0.5);
   animation: trembling 0.3s ease infinite;
