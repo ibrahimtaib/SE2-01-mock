@@ -122,15 +122,19 @@ app.get("/api/services", async (req, res) => {
 });
 
 //Get All Counters
-app.get("/api/counters", async (req, res) => {
-  try {
-    const result = await dao.getCounters();
-    if (result.error) res.status(404).json(result);
-    else res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: "Internal Server Error" });
+app.get('/api/counters',
+  async (req, res) => {
+    try {
+      const result = await dao.getCounters();
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.json(result);
+    } catch (err) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
-});
+);
 
 ///*  API Website  *///
 app.listen(port, () => {

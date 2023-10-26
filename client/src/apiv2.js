@@ -3,7 +3,7 @@ const URL = 'http://localhost:3001/api'
 
 ///* API LOGIN *///
 
-async function login(username, password) {
+export async function login(username, password) {
     let response = await fetch(URL + '/sessions', {
       method: 'POST',
       credentials: 'include',
@@ -21,14 +21,14 @@ async function login(username, password) {
     }
   }
   
-  async function logout() {
+  export async function logout() {
     await fetch(URL + '/sessions/current', {
       method: 'DELETE',
       credentials: 'include'
     });
   }
   
-  async function getUserInfo() {
+  export async function getUserInfo() {
     const response = await fetch(URL + '/sessions/current', {
       credentials: 'include'
     });
@@ -40,7 +40,7 @@ async function login(username, password) {
     }
   }
 
-  async function getTicket(serviceId){
+  export async function getTicket(serviceId){
     const response = await fetch(URL+'/api/tickets',{
         method:'POST',
         credentials:'include',
@@ -55,7 +55,7 @@ async function login(username, password) {
 
   }
 
-  async function getServices(){
+  export async function getServices(){
     const response = await fetch(URL+'/api/services',{
         method:'GET',
         credentials:'include'
@@ -69,7 +69,21 @@ async function login(username, password) {
 
   }
 
-  async function getNextCostumer(counterId){
+  export async function getCounters(){
+    const response = await fetch(URL+'/api/counters',{
+        method:'GET',
+        credentials:'include'
+    })
+    const counters = response.json();
+    if (response.ok) {
+        return counters;
+      } else {
+        throw counters;
+      }
+
+  }
+
+  export async function getNextCostumer(counterId){
     const response = await fetch(URL+'/api/next',{
         method:'POST',
         credentials:'include',
@@ -82,14 +96,3 @@ async function login(username, password) {
         throw services;
       }
   }
-  
-  const API = {
-    getUserInfo,
-    login,
-    logout,
-    getServices,
-    getTicket,
-    getNextCostumer,
-  }
-  
-  export default API;

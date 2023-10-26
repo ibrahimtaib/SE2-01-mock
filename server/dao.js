@@ -197,19 +197,27 @@ const databaseFunctions = {
     return new Promise((resolve, reject) => {
       db.all(
         `
-      SELECT *, GROUP_CONCAT(services.name,', ') as services_list
-      FROM counters
-      JOIN services ON counters.serviceID = services.serviceID
+      SELECT counterID, GROUP_CONCAT(services.serviceID,', ') as services_list, userID, username
+      FROM config_counters
+      JOIN services ON config_counters.serviceID = services.serviceID
+      JOIN user ON user.userID = config_counters.officerID
       GROUP BY counterID
       `,
         [],
         (err, rows) => {
           if (err) {
+            console.log(err);
             reject(new Error("Failed to get counters."));
-          } else if (rows.length == 0) {
-            resolve({ error: "No counters found." });
           } else {
-            resolve(rows);
+            console.log(rows);
+            resolve(
+              rows.map((row) => ({
+                counterId: row.counterID,
+                services: row.services_list.split(", "),
+                officer: { officerId: row.userID, username: row.username },
+                name: row.username,
+              }))
+            );
           }
         }
       );

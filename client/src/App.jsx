@@ -44,6 +44,7 @@ function App() {
       <Routes>
         <Route path="/" element={<QueueManagment loggedIn={loggedIn} doLogout={doLogout} user={user} />} />
         <Route path="/login" element={loggedIn ? <Navigate replace to='/' /> : <LoginComponent loginSuccessful={loginSuccessful} setWaiting={setWaiting}></LoginComponent>} />
+        <Route path="/login" element={<LoginComponent />} />
       </Routes>
     </BrowserRouter>
   )
