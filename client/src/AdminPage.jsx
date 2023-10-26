@@ -5,6 +5,7 @@ import { COUNTERS_MOCK } from './data_mock';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear } from '@fortawesome/free-solid-svg-icons'
 import ServicesModal from './Components/ServicesModal';
+import { Modal } from 'react-bootstrap';
 
 function AdminPage() {
   const [selectMode, toggleSelectMode] = useState(false);
@@ -13,6 +14,9 @@ function AdminPage() {
   const handleClose = () => setOpen(false);
   const [settingsOpened, setSettingsOpened] = useState(false);
   const countersSet = new Set();
+  const [openSettings, setOpenSettings] = React.useState(false);
+  const handleOpenSettings = () => setOpenSettings(true);
+  const handleCloseSettings = () => setOpenSettings(false);
   return (
     <div className='fullscreen-container'>
       <div className='admin-system'>
@@ -22,16 +26,6 @@ function AdminPage() {
           open={open}
           handleClose={handleClose}
           />
-        <button className="settings-button" onClick={() => {
-          setSettingsOpened(!settingsOpened);
-        }}>
-          {!settingsOpened?(<FontAwesomeIcon className='icon' icon={faGear} />):"Manage Services"}
-          </button>
-        <ul className="nav">
-          <li className="nav-item">
-            <button>Manage Services</button>
-          </li>
-        </ul>
         <h1>Administration System</h1>
         <button className="btn" disabled={!selectMode} onClick={handleOpen} >Select Services</button>
         <button className="btn" 
