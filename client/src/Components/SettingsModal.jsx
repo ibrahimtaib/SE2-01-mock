@@ -30,15 +30,13 @@ function deleteServices(servicesToDelete) {
     API.deleteService(service.serviceID)
       .then(() => console.log("Deleted!"))
       .catch((err) => console.log(err));
-    
-    
-  });
-
-  API.getServices()
+    API.getServices()
       .then((services) => {
         setServices(services);
       });
+  });
 }
+  
 
 
 function SettingsModal({services , setServices, openSettings, handleCloseSettings}) {
