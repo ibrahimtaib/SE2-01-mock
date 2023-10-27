@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
 import './App.css'
 import QueueManagment from './QueManagement.jsx'
@@ -23,6 +23,7 @@ function App() {
   const loginSuccessful = (user) => {
     setLoggedIn(true);
     setUser(user);
+
   }
 
   useEffect(() => {
@@ -42,9 +43,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<QueueManagment loggedIn={loggedIn} doLogout={doLogout} user={user} />} />
+        <Route path="/" element={loggedIn ? <QueueManagment loggedIn={loggedIn} doLogout={doLogout} user={user} /> : <Navigate replace to='/login' />} />
         <Route path="/login" element={loggedIn ? <Navigate replace to='/' /> : <LoginComponent loginSuccessful={loginSuccessful} setWaiting={setWaiting}></LoginComponent>} />
-        <Route path="/admin" element={<AdminPage />}></Route>
+        <Route path="/admin" element={loggedIn ? <AdminPage doLogout={doLogout} /> : <Navigate replace to='/login' />} />
       </Routes>
     </BrowserRouter>
   )

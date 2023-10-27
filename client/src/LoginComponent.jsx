@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 function LoginComponent(props) {
     const navigate = useNavigate();
-    const [username, setUsername] = useState("counter1");
+    const [username, setUsername] = useState("Redon_Admin");
     const [password, setPassword] = useState("ciaociao");
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -15,6 +15,8 @@ function LoginComponent(props) {
         API.login(username, password)
             .then(user => {
                 props.loginSuccessful(user);
+                if(user.role == 2) navigate ("/admin")
+                else navigate('/');
             })
             .catch(err => {
                 setErrorMessage('Errore login!');
@@ -59,8 +61,8 @@ function LoginComponent(props) {
                                     </Row>
                                     <br></br>
                                     <Button type="submit" variant="secondary">Login</Button>
-                                    <Button type="submit" variant="secondary" href="/" active={false} onClick={event => { event.preventDefault(); navigate("/"); }}>Home</Button>
-                                </Form>
+{/*                                     <Button type="submit" variant="secondary" href="/" active={false} onClick={event => { event.preventDefault(); navigate("/"); }}>Home</Button>
+ */}                                </Form>
                             </Container>
                         </Card>
                     </Col>

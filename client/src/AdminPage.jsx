@@ -6,7 +6,7 @@ import ServicesModal from './Components/ServicesModal';
 import SettingsModal from './Components/SettingsModal';
 import API from './API';
 // import api from './apiv2';
-function AdminPage() {
+function AdminPage(props) {
   const [selectMode, toggleSelectMode] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [services,setServices] = useState([]);
@@ -53,6 +53,7 @@ function AdminPage() {
             handleCloseSettings={handleCloseSettings}
           />
         <h1>Administration System</h1>
+        <button  style={{ position: 'relative', right: -800, top: -90 }} onClick={props.doLogout} className='btn'>Logout</button>
         <button className="settings-button" disabled={selectMode} onClick={handleOpenSettings} >Manage Services</button>
         <button className="btn" disabled={!selectMode} onClick={handleOpen} >Select Services</button>
         <button className="btn" 
