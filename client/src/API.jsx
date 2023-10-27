@@ -62,15 +62,14 @@ async function login(username, password) {
     }
   }
 
-  //TODO: FIX THIS
-  async function deleteService(counterID) {
+  async function deleteService(serviceID) {
     try {
-      const response = await fetch('/api/delete_service', {
+      const response = await fetch(URL +'/delete_service', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ counterID: counterID })
+        body: JSON.stringify({ serviceID: serviceID })
       });
       if (response.ok) {
         const data = await response.json();
@@ -82,11 +81,34 @@ async function login(username, password) {
       console.error(err);
     }
   }
+
+  async function postService(service) {
+    try {
+      const response = await fetch(URL +'/service', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ service: service })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error('Failed to delete services');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  
   
   const API = {
     getUserInfo,
     getServices,
     getCounters,
+    postService,
     deleteService,
     login,
     logout

@@ -113,13 +113,11 @@ app.post("/api/tickets", (req, res) => {
 
 //Create a service
 app.post("/api/service", (req, res) => {
-  const { serviceName } = req.body;
-
-  if (!serviceName) {
+  if (!req.body.service) {
     return res.status(400).json({ error: "Service name is required!" });
   }
   dao
-    .createService(serviceName)
+    .createService(req.body.service)
     .then((result) => res.json(result))
     .catch((err) =>
       res
@@ -229,8 +227,8 @@ app.delete('/api/delete_services/:counterID', async (req, res) => {
 
 app.delete("/api/delete_service", async (req, res) => {
   try {
+    console.log(req.body.serviceID);
     await dao.deleteService(req.body.serviceID);
-    console.log(req.body);
     res.json({});
   } catch (err) {
     res.status(500).json({ error: `Internal Server Error` });

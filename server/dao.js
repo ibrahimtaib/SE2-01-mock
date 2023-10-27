@@ -462,6 +462,7 @@ const databaseFunctions = {
   },
 
   async deleteService(counterID) {
+    console.log("IN DELETE SERVICE DAO" + counterID);
     return new Promise((resolve, reject) => {
       db.run(
         "DELETE FROM services WHERE serviceID = ?",
@@ -475,7 +476,7 @@ const databaseFunctions = {
         }
       );
     });
-  },
+  }
 };
 
 
