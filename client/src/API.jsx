@@ -62,9 +62,10 @@ async function login(username, password) {
     }
   }
 
+  //TODO: FIX THIS
   async function deleteService(counterID) {
     try {
-      const response = await fetch('/api/delete_services', {
+      const response = await fetch('/api/delete_service', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

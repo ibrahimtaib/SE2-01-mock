@@ -26,7 +26,8 @@ function deleteServices(servicesToDelete) {
   const servToDeleteArray = Array.from(servicesToDelete);
   console.log(servToDeleteArray[0].serviceID);
   
-  servToDeleteArray.forEach((service, setServices) => {
+  //TODO: FIX THIS
+  servToDeleteArray.map((service, setServices) => {
     API.deleteService(service.serviceID)
       .then(() => console.log("Deleted!"))
       .catch((err) => console.log(err));

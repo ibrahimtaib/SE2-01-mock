@@ -227,7 +227,7 @@ app.delete('/api/delete_services/:counterID', async (req, res) => {
   }
 });*/
 
-app.delete("/api/delete_services", async (req, res) => {
+app.delete("/api/delete_service", async (req, res) => {
   try {
     await dao.deleteService(req.body.serviceID);
     console.log(req.body);
