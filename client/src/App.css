@@ -126,6 +126,7 @@ h2 {
 }
 
 .counter, .counter-unselected, .counter-selected {
+  position: relative;
   --box-shadow-clr : rgba(0, 0, 0, 0.1);
   background-color: #fff;
   border: 1px solid #ccc;
@@ -141,9 +142,9 @@ h2 {
 .counter {
   animation: zoomIn 0.8s 1 ease;
 }
-.counter-unselected:hover, .counter-selected:hover {
+/* .counter-unselected:hover, .counter-selected:hover {
   cursor: pointer;
-}
+} */
 .counter-unselected {
   --box-shadow-clr: rgba(0, 0, 0, 0.5);
   animation: trembling 0.3s ease infinite;
@@ -374,4 +375,16 @@ h3{
 
 .counter-animating {
   animation: pulse 0.6s infinite;
+}
+
+.counter-selected .info-icon, .counter-unselected .info-icon {
+  color: white;
+  background-color: #333;
+  border-radius: 50%;
+  border: 1px solid #333;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 8px;
+  margin-right: 8px;
 }

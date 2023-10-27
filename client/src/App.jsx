@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, } from 'react-rout
 
 import './App.css'
 import QueueManagment from './QueManagement.jsx'
+import AdminPage from './AdminPage.jsx'
 // import NavHeader from './NavBarComponent'; NOT USED
 import API from './API';
 import { LoginComponent, LogoutButton } from './LoginComponent';
@@ -42,7 +43,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<QueueManagment loggedIn={loggedIn} doLogout={doLogout} user={user} />} />
+        <Route path="/" element={<AdminPage />} />
         <Route path="/login" element={loggedIn ? <Navigate replace to='/' /> : <LoginComponent loginSuccessful={loginSuccessful} setWaiting={setWaiting}></LoginComponent>} />
         <Route path="/admin" element={<AdminPage />}></Route>
       </Routes>

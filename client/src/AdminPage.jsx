@@ -60,7 +60,7 @@ function AdminPage() {
           style={{backgroundColor: selectMode?'#4CAF50':''}}
           >Configure Counters</button>
         <div className='counters-div'>
-        {counters.map((counter) => <CounterSelectable key={counter.counterId} counter={counter} selectMode={selectMode} countersSet={countersSet}/>)}
+        {counters.map((counter) => <CounterSelectable key={counter.counterId} counter={counter} services={services} selectMode={selectMode} countersSet={countersSet}/>)}
         </div>
       </div>
     </div>

@@ -101,15 +101,52 @@ async function login(username, password) {
       console.error(err);
     }
   }
-
   
+  async function addServicesToCounters(counters, services) {
+    try {
+      const response = await fetch(URL +'/service', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ counters, services })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error('Failed to add services');
+      }
+    } catch (err) {
+      console.error(err);
+    }  }
   
+    async function deleteServicesToCounters(counters, services) {
+      try {
+        const response = await fetch(URL +'/service', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ counters, services })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          return data;
+        } else {
+          throw new Error('Failed to delete services');
+        }
+      } catch (err) {
+        console.error(err);
+      }  }
   const API = {
     getUserInfo,
     getServices,
     getCounters,
     postService,
     deleteService,
+    addServicesToCounters,
+    deleteServicesToCounters,
     login,
     logout
   }

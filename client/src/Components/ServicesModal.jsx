@@ -9,7 +9,7 @@ import API from '../API';
 
 //TODO: The function is made to add or delete services for counters * ///
 
-/* function manageServicesOfCounters(servicesSet, countersSet, deleteTrue) {
+async function manageServicesOfCounters(servicesSet, countersSet, deleteTrue) {
   console.log(servicesSet);
   console.log(countersSet);
   
@@ -20,11 +20,13 @@ import API from '../API';
 
   if (deleteTrue) {
     //api call to delete services from counters
+    await API.deleteServicesToCounters(countersArray, servicesArray)
   } else {
     //api call to add services to counters
+    await API.addServicesToCounters(countersArray, servicesArray)
   }
   return;
-} */
+} 
 
 
 function ServicesModal({ counters, services, selectMode, open, handleClose }) {
@@ -55,8 +57,8 @@ function ServicesModal({ counters, services, selectMode, open, handleClose }) {
           })}
         </div>
         <div className='buttons'>
-          <button className="btn" disabled={!selectMode} /* onClick={manageServicesOfCounters(...{ countersSet, servicesSet }, true)} */>Add Services</button>
-          <button className="btn" disabled={!selectMode} /* onClick={manageServicesOfCounters(...{ countersSet, servicesSet }, false)} */>Delete Services</button>
+          <button className="btn" disabled={!selectMode}  onClick={manageServicesOfCounters(...{ countersSet, servicesSet }, true)} >Add Services</button>
+          <button className="btn" disabled={!selectMode}  onClick={manageServicesOfCounters(...{ countersSet, servicesSet }, false)} >Delete Services</button>
         </div>
       </div>
     </Modal>
