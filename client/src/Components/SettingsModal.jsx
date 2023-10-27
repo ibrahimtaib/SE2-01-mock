@@ -4,6 +4,7 @@ import Modal from '@mui/material/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { SERVICES_MOCK } from '../data_mock';
+import API from '../API';
 
 
 function postNewService(serviceInput) {
@@ -24,7 +25,10 @@ function deleteServices(servicesToDelete) {
   //if not cycle this Set (service to delete is a set) and do a post request to API.deleteServices()
   const servToDeleteArray = Array.from(servicesToDelete);
   console.log(servToDeleteArray[0].serviceID);
-  // TODO: Add function
+  
+  servToDeleteArray.forEach((service) => {
+    console.log(service);
+  })
 }
 
 

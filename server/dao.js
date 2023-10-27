@@ -8,29 +8,29 @@ const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
 });
 
 db.exec(
-  `DELETE FROM user;
+  `DELETE FROM users;
           DELETE FROM config_counters;
           DELETE FROM tickets;
           DELETE FROM services;
           DELETE FROM stats;
           DELETE FROM counters;
-        INSERT INTO user(userID ,username, hash, salt, role)
+        INSERT INTO users(userID ,username, hash, salt, role)
         VALUES(1,'Francesco_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
-        INSERT INTO user(userID,username, hash, salt, role)
+        INSERT INTO users(userID,username, hash, salt, role)
         VALUES(2, 'Jad_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
-        INSERT INTO user(userID, username, hash, salt, role)
+        INSERT INTO users(userID, username, hash, salt, role)
         VALUES(3, 'Manar_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
-        INSERT INTO user(userID, username, hash, salt, role)
+        INSERT INTO users(userID, username, hash, salt, role)
         VALUES(4, 'Federico_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
-        INSERT INTO user(userID, username, hash, salt, role)
+        INSERT INTO users(userID, username, hash, salt, role)
         VALUES(5, 'Ibrahim_Counter', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 1);
-        INSERT INTO user(userID, username, hash, salt, role)
+        INSERT INTO users(userID, username, hash, salt, role)
         VALUES(6, 'Redon_Admin', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 2);
-        INSERT INTO user(userID, username, hash, salt, role)
+        INSERT INTO users(userID, username, hash, salt, role)
         VALUES(7, 'Mauro_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
-        INSERT INTO user(userID ,username, hash, salt, role)
+        INSERT INTO users(userID ,username, hash, salt, role)
         VALUES(8,'Giovanni_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
-        INSERT INTO user(userID ,username, hash, salt, role)
+        INSERT INTO users(userID ,username, hash, salt, role)
         VALUES(9,'Carlo_User', '044629b867bc855e82417ce1dcfad94b15b3a1551cf60ea412f801a94b83f7c5', '72e4eeb14def3b44', 0);
         INSERT INTO services(serviceID, name)
         VALUES(1, 'Customer Issues');
@@ -77,7 +77,7 @@ const databaseFunctions = {
 
   async getUser(username, password) {
     return new Promise((resolve, reject) => {
-      const sql = "SELECT * FROM user WHERE username = ?";
+      const sql = "SELECT * FROM users WHERE username = ?";
       db.get(sql, [username], (err, row) => {
         if (err) {
           reject(err);
@@ -104,7 +104,7 @@ const databaseFunctions = {
 
   async getUserById(id) {
     return new Promise((resolve, reject) => {
-      const sql = "SELECT * FROM user WHERE userID = ?";
+      const sql = "SELECT * FROM users WHERE userID = ?";
       db.get(sql, [id], (err, row) => {
         if (err) reject(err);
         else if (row === undefined) resolve({ error: "Utente non trovato." });
@@ -267,7 +267,7 @@ const databaseFunctions = {
       SELECT counterID, GROUP_CONCAT(services.serviceID,', ') as services_list, userID, username
       FROM config_counters
       JOIN services ON config_counters.serviceID = services.serviceID
-      JOIN user ON user.userID = config_counters.officerID
+      JOIN users ON users.userID = config_counters.officerID
       GROUP BY counterID
       `,
         [],

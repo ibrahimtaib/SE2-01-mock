@@ -61,11 +61,32 @@ async function login(username, password) {
       throw counters;
     }
   }
+
+  async function deleteServices(counterID) {
+    try {
+      const response = await fetch('/api/delete_services', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ counterID: counterID })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error('Failed to delete services');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
   
   const API = {
     getUserInfo,
     getServices,
     getCounters,
+    deleteServices,
     login,
     logout
   }
