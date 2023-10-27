@@ -227,10 +227,10 @@ app.delete('/api/delete_services/:counterID', async (req, res) => {
   }
 });*/
 
-//da correggere
 app.delete("/api/delete_services", async (req, res) => {
   try {
-    await dao.deleteServices(counterID);
+    await dao.deleteService(req.body.serviceID);
+    console.log(req.body);
     res.json({});
   } catch (err) {
     res.status(500).json({ error: `Internal Server Error` });

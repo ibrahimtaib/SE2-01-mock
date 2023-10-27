@@ -62,7 +62,7 @@ async function login(username, password) {
     }
   }
 
-  async function deleteServices(counterID) {
+  async function deleteService(counterID) {
     try {
       const response = await fetch('/api/delete_services', {
         method: 'DELETE',
@@ -86,7 +86,7 @@ async function login(username, password) {
     getUserInfo,
     getServices,
     getCounters,
-    deleteServices,
+    deleteService,
     login,
     logout
   }

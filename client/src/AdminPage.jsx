@@ -34,7 +34,7 @@ function AdminPage() {
       });
   }, []);
 
-  // OK
+  //
 
   return (
     <div className='fullscreen-container'>
@@ -48,6 +48,7 @@ function AdminPage() {
           />
           <SettingsModal
             services={services}
+            setServices={setServices}
             openSettings={openSettings}
             handleCloseSettings={handleCloseSettings}
           />

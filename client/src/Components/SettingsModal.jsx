@@ -26,13 +26,22 @@ function deleteServices(servicesToDelete) {
   const servToDeleteArray = Array.from(servicesToDelete);
   console.log(servToDeleteArray[0].serviceID);
   
-  servToDeleteArray.forEach((service) => {
-    console.log(service);
-  })
+  servToDeleteArray.forEach((service, setServices) => {
+    API.deleteService(service.serviceID)
+      .then(() => console.log("Deleted!"))
+      .catch((err) => console.log(err));
+    
+    
+  });
+
+  API.getServices()
+      .then((services) => {
+        setServices(services);
+      });
 }
 
 
-function SettingsModal({services ,openSettings, handleCloseSettings}) {
+function SettingsModal({services , setServices, openSettings, handleCloseSettings}) {
   const servicesSet = new Set();
   const serviceInput = React.useRef(null);
   const [newService, setNewService] = React.useState();
@@ -63,7 +72,7 @@ function SettingsModal({services ,openSettings, handleCloseSettings}) {
         })}
       </div>
       <div className='buttons'>
-        <button className="btn" onClick={() => deleteServices(servicesSet)}>Delete Services</button>
+        <button className="btn" onClick={() => deleteServices(servicesSet,setServices)}>Delete Services</button>
       </div>
       <div className="add-service-div">
         <input ref={serviceInput} type="text" className="add-service-input" onChange={event => {setNewService(event.target.value);}} placeholder="Service name" />

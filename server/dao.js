@@ -1,6 +1,7 @@
 "use strict";
 
 const sqlite = require("sqlite3");
+const crypto = require("crypto");
 
 // open the database
 const db = new sqlite.Database("se2-01-mock.sqlite", (err) => {
@@ -459,6 +460,24 @@ const databaseFunctions = {
       );
     });
   },
+
+  async deleteService(counterID) {
+    return new Promise((resolve, reject) => {
+      db.run(
+        "DELETE FROM services WHERE serviceID = ?",
+        [counterID],
+        function (err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve("success");
+          }
+        }
+      );
+    });
+  },
 };
+
+
 
 module.exports = databaseFunctions;
